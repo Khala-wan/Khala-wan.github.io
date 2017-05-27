@@ -11,9 +11,9 @@ url: http://khala-wan.github.io
 
 # Harmony theme configuration. Please change accordingly.
 harmony:
-  name: Khala-wan
+  name: KhalaWan's Blog
   # Little description about your site
-  description: 万圣的博客
+  description: 这里存放着我想记录下来的东西（包括我意识模糊时的胡思乱想）。愿神圣的卡拉连接着我们！
   # 'meta_description:' Write an awesome description for your new site here.
   # It will appear in your document head meta (for Google search results) and 
   # in your feed.xml site description.
