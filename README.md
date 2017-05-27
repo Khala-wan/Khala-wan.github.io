@@ -1,37 +1,85 @@
-## Welcome to GitHub Pages
+# { Personal } Jekyll Theme
+![Build Status](https://travis-ci.org/PanosSakkos/personal-jekyll-theme.svg?branch=master)
+![license](https://img.shields.io/badge/license-MIT-blue.svg?link=https://github.com/dono-app/ios/blob/master/LICENSE)
+[![Join the chat at https://gitter.im/PanosSakkos/personal-jekyll-theme](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/PanosSakkos/personal-jekyll-theme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-You can use the [editor on GitHub](https://github.com/Khala-wan/Khala-wan.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+{ Personal } is a free responsive Jekyll theme, about you :wink:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+You can watch it in action [here](https://panossakkos.github.io/personal-jekyll-theme/)!
 
-### Markdown
+<img src="https://github.com/panossakkos/personal-jekyll-theme/raw/master/.github/personal-mobile.mov.gif" height="480">
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<img src="https://github.com/panossakkos/personal-jekyll-theme/raw/master/.github/personal-desktop.mov.gif" height="600" width="960">
 
-```markdown
-Syntax highlighted code block
+## What value does { Personal } add
 
-# Header 1
-## Header 2
-### Header 3
+* Fork of [Timeline](https://github.com/kirbyt/timeline-jekyll-theme) (mashup of [Grayscale by Start Bootstrap](https://github.com/IronSummitMedia/startbootstrap-grayscale) and [Agency Jekyll Theme](https://github.com/y7kim/agency-jekyll-theme))
+  * Modern and minimal design
+    * Responsive templates for home page, blog archive and posts. Looks great on mobile, tablet, and desktop devices
+    * Sweet animations
+    * Gracefully degrades in older browsers. Compatible with Internet Explorer 8+ and all modern browsers
+  * Timeline
+    * Tell your story so far with a sleek timeline of dates, pictures and descriptions
+  * White on black text, making the reading experience tireless
+  * Google analytics  
+* Customization and full control of your website and blog through the site config
+* Customization of the website's coloring
+* Blogging functionality
+  * Preview of the latest post in the home page
+  * Archive page
+  * Syntax highlighting
+  * Emojis
+  * Gesture navigation in archive and post pages by swiping
+  * Hashtags
+  * Categories
+  * Disqus comments
+  * Bootstrap share buttons
+  * RSS feed
+* Author blurb under the posts
+* 404 page
+* iOS and Android Web App mode
+* Enforcing of https protocol
+* Protection from email harvesting
+* Sitemap
+* Travis CI integration with [html-proofer](https://github.com/gjtorikian/html-proofer)
 
-- Bulleted
-- List
+## Documentation
 
-1. Numbered
-2. List
+The theme contains documentation in the form of [blog posts](https://panossakkos.github.io/personal-jekyll-theme/blog/index.html).
 
-**Bold** and _Italic_ and `Code` text
+## How to run locally
 
-[Link](url) and ![Image](src)
+First, you need to install jekyll and the dependencies of { Personal } by running:
+
+```shell
+./scripts/install
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Then, you can build and serve your website by simply running:
 
-### Jekyll Themes
+```shell
+./scripts/serve-production
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Khala-wan/Khala-wan.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+To serve across lan (requires su to forward the port 4000 over lan):
 
-### Support or Contact
+```shell
+./scripts/serve-lan-production
+```
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## OSS used in { Personal }
+
+One of the reasons { Personal } is real is the following OSS projects:
+
+  1. [Grayscale](http://startbootstrap.com/template-overviews/grayscale/)
+  2. [hammer.js](https://hammerjs.github.io/)
+  3. [highlightjs](https://highlightjs.org/)
+  4. [RRSSB](https://github.com/kni-labs/rrssb)
+  5. [Timeline](https://github.com/kirbyt/timeline-jekyll-theme)
+  6. [typed.js](https://github.com/mattboldt/typed.js/)
+
+<div style="font-size:16px;margin:0 auto;width:300px">
+    <a href="https://blockchain.info/address/1LHuKC9Em3KA5yoZaf7nngnNdf9K7s2gSi">
+        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
+    </a>
+</div>
