@@ -63,7 +63,7 @@ me-img: "/img/jetpacktocat.png"
 ##############################
 # Color the browser elements #
 ##############################
-color-browser: "#ffffff"
+color-browser: "#000000"
 apple-status-bar-style: "black"
 
 ################
@@ -176,7 +176,7 @@ keybase-in-footer: True
 # Sections shown in the index page
 
 pages_list:
-  About: '关于'
+  wwww: 'about'
   Blog: 'latest-post'
   Timeline: 'timeline'
   Contact: 'contact'
