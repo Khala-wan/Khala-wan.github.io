@@ -28,11 +28,11 @@ force-https: True
 # HTML Head #
 #############
 
-lang: "en"
+lang: "zh-cn"
 author: "万圣"
 title: "{ Khala-wan }"
-description: "Blog and website of John Smith, blogging mainly for tech. Opinions expressed are mine."
-keywords: "smith, jones, personal, jekyll, theme"
+description: "万圣的博客"
+keywords: "ios,swift,khala-wan"
 favicon: "/img/favicon.ico"
 
 ################
@@ -63,7 +63,7 @@ me-img: "/img/jetpacktocat.png"
 ##############################
 # Color the browser elements #
 ##############################
-color-browser: "#000000"
+color-browser: "#ffffff"
 apple-status-bar-style: "black"
 
 ################
@@ -176,7 +176,7 @@ keybase-in-footer: True
 # Sections shown in the index page
 
 pages_list:
-  About: 'about'
+  About: '关于'
   Blog: 'latest-post'
   Timeline: 'timeline'
   Contact: 'contact'
