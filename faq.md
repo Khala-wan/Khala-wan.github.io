@@ -3,8 +3,6 @@ layout: page
 title: Help / FAQ
 ---
 
-这是作者的faq页面，如果你也喜欢这个theme，那还等什么?赶紧去下吧.
-
 What is harmony?
 : Harmony is a free jekyll theme, for bloggers who love jekyll. Designed and build by [Gayan Virajith](http://gayanvirajith.github.io) & [Maheshika Lakmali](http://maheshikalakmali.github.io). 
 
