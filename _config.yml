@@ -176,8 +176,8 @@ keybase-in-footer: True
 # Sections shown in the index page
 
 pages_list:
-  wwww: 'about'
-  Blog: 'latest-post'
+  "关于": 'about'
+  "博客": 'latest-post'
   Timeline: 'timeline'
   Contact: 'contact'
 
