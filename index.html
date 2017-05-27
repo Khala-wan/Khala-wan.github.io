@@ -6,7 +6,7 @@ layout: default
   		{% for post in site.posts limit:10 %}
   			<div class="post">
     			<h3 class="post-title">
-			      <a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">
+			      <a href="{{ post.url | prepend: site.baseurl | https:/ }}">
 			        {{ post.title }}
 			      </a>
     			</h3>
@@ -26,7 +26,7 @@ layout: default
 	  				{{ post.excerpt }}	
   				</p>
   				<p>
-  					<a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}" title="{{ post.title}}">
+  					<a href="{{ post.url | prepend: site.baseurl | https:/ }}" title="{{ post.title}}">
   						Read More
 					</a>
   				</p>
@@ -34,6 +34,6 @@ layout: default
   		{% endfor %}
 	</div>
 	<div class="post-footer">
-		<div class="column-full"><a href="{{ '/blog' | prepend: site.baseurl | prepend: site.url }}">Blog archive</a></div>
+		<div class="column-full"><a href="{{ '/blog' | prepend: site.baseurl | https:/ }}">Blog archive</a></div>
 	</div>
 </div>
