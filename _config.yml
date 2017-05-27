@@ -1,10 +1,10 @@
 # Harmony Jekyll theme general configurations 
 
 # Base URL
-baseurl: Khala-wan.github.io
+baseurl: /Khala-wan.github.io
 
 # Site live URL
-url: http://
+url: http://khala-wan
 
 # Localhost 
 # url: http://127.0.0.1:4000  
