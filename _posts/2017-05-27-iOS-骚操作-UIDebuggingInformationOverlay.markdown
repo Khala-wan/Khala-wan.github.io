@@ -68,11 +68,11 @@ var needToMessage:Bool = false
 呃。。。讲真的这个功能绝对是我们和UI撕逼的双刃剑。有了它，你不用再因为那么0.5px的问题争论半天。但是如果UI会用它了，那么你可能还要多几个0.5px的问题😂
 <div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-11.jpg"/></div>
 点击Vertical并长按你想测量的地方就可以显示出垂直方向上对应的间距，还可以按住不动拖动手指测量别的地方。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-12.jpg)
+<div align="center"><img width="150" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-12.jpg"/></div>
 如果想测量水平方向，你懂得，点Horizontal。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-13.jpg)
+<div align="center"><img width="150" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-13.jpg"/></div>
 细心的你会发现还有个叫View Mode的Switch。如果你打开了它，你的测量就会基于每一个View进行测量，效果如下：
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-14.jpg)
+<div align="center"><img width="150" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-14.jpg"/></div>
 
 ## Spec Compare (UI对比工具)
 这个功能可以让我们在对比UI图和实际开发出来的界面时不用两个页面看来看去。只需要从相册选择你这个页面的UI截图。然后向下滑动就可以增加透明度以比对细节。效果如下(UI图我找不到了。先用系统的凑合下)：
