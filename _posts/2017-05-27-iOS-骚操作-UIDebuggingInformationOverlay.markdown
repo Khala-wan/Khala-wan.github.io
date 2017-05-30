@@ -87,11 +87,15 @@ var needToMessage:Bool = false
 ## 使用UIDebuggingInformationOverlay
 
 说了那么多，那么要怎么使用它呢。
+
 OC：
 ```objective-c
 Class overlayClass = NSClassFromString(@"UIDebuggingInformationOverlay");
+
 [overlayClass performSelector:NSSelectorFromString(@"prepareDebuggingOverlay")];
+
 id obj = [overlayClass performSelector:NSSelectorFromString(@"overlay")];
+
 //呼出UIDebuggingInformationOverlay窗口
 [obj performSelector:NSSelectorFromString(@"toggleVisibility")];
 
