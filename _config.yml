@@ -1,9 +1,9 @@
-title: "Blog Title"
-author: "Blog Author"
+title: "Khala-Wan`"
+author: "Khala-Wan"
 description: "Really cool blog about ... something"
 more: "read more »"
-url: "https://niklasbuschmann.github.io"
-baseurl: "/contrast" # comment out if in root directory
+url: "https://khala-wan.github.io"
+#baseurl: "/contrast" # comment out if in root directory
 
 comments:
   disqus: "niklasbuschmann"
