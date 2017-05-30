@@ -25,7 +25,7 @@ UIDebuggingInformationOverlay是一个私有的UIWindow的子类。它的作用�
 * System Color Audit（暂时没发现有什么用）
 
 ![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-1.jpg)
-<div align=center><img width="150" height="150" src="http://img.blog.csdn.net/20161028230559575"/></div>
+<img width="1500" height="1500" src="http://img.blog.csdn.net/20161028230559575"/>
 
 ## View Hierarchy (查看视图层级)
 
