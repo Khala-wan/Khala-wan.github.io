@@ -18,7 +18,6 @@
   <h1><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
   <nav>
     <li><a href="{{ site.baseurl }}/">Home</a></li>{% for node in site.pages offset: 1 %}{% if node.title %}<li><a href="{{ node.url | prepend: site.baseurl }}"{% if page.url == node.url %} class="selected"{% endif %}>{{ node.title }}</a></li>{% endif %}{% endfor %}
-    <li><a href="{{ site.url }}/About">About</a></li>
   </nav>
 </header>
 {{ content }}
