@@ -11,7 +11,7 @@ categories:
 
 UIDebuggingInformationOverlay是一个私有的UIWindow的子类。它的作用就是用来帮助iOS的开发人员和设计人员用来调试自己的APP。值得一提的是这个功能(Window)是个私有类。是前几天才被Ryan Peterson在浏览UIKit的私有头文件的时候发现并公布给大家。这是他的英文原文博客[UIDebuggingInformationOverlay](http://ryanipete.com/blog/ios/swift/objective-c/uidebugginginformationoverlay/).
 
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-0.jpg)
+![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-0.jpg??imageMogr2/auto-orient/strip%7CimageView2/2/w/1240 "图标1")
 
 ## UIDebuggingInformationOverlay能帮我们干什么
 
