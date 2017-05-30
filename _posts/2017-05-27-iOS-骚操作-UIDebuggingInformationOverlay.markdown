@@ -1,11 +1,7 @@
 ---
-layout: post
 title:  "iOS-骚操作-UIDebuggingInformationOverlay"
 date:   2017-05-27 22:48:45
-description: UIDebuggingInformationOverlay是一个新的工具帮助我们更好地调试我们的APP.
-categories:
-- blog
-- iOS
+categories: iOS 
 ---
 
 
