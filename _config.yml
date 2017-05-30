@@ -1,64 +1,37 @@
-# Harmony Jekyll theme general configurations 
+title: "Blog Title"
+author: "Blog Author"
+description: "Really cool blog about ... something"
+more: "read more »"
+url: "https://niklasbuschmann.github.io"
+baseurl: "/contrast" # comment out if in root directory
 
-# Base URL
-baseurl: /Khala-wan.github.io
+comments:
+  disqus: "niklasbuschmann"
+#  isso: "comments.mysite.org"
 
-# Site live URL
-url: http://khala-wan
+style:
+  body: 'white'
+  margin: 0%
+  padding: 30%
+  nav: "#222"
+  articles: 'stripe' # 'light' 'dark' and 'stripe' possible
+  uppercase: true
 
-# Localhost 
-# url: http://127.0.0.1:4000  
+# see http://fontawesome.io/icons/#brand for all possible icons
+# notice: squared icons only work if supported by font-awesome
 
-# Harmony theme configuration. Please change accordingly.
-harmony:
-  name: Khala-wan's  Blog
-  # Little description about your site
-  description: 这是个放满了胡思乱想的地方
-  # 'meta_description:' Write an awesome description for your new site here.
-  # It will appear in your document head meta (for Google search results) and 
-  # in your feed.xml site description.
-  meta_description: > # 
-   Harmony is a free responsive jekyll theme by Gayan Virajith
-   and Maheshika Lakmali. Sourced on Github - 
-   https://github.com/gayanvirajith/harmony
-  basetheme: theme-base-01 # pre defined thmes are darken, blue-water, redish.
-  author: # Author details
-    name: Khala-wan
-    email: wansheng_ios@sina.com
-    url: http://khala-wan.github.io
+links:
+  - github: {url: "https://github.com/me/", square: true}
+  - reddit: {url: "https://www.reddit.com/user/me/", square: true}
+  - twitter: {url: "https://twitter.com/me/", square: true}
+  - facebook: {url: "https://www.facebook.com/me", square: true}
+  - google-plus: {url: "https://plus.google.com/+me", square: true}
+  - youtube: {url: "https://www.youtube.com/user/me", square: true}
+  - tumblr: {url: "http://me.tumblr.com/", square: true}
+  - steam: {url: "http://steamcommunity.com/id/me/", square: true}
 
-  # Google Analytics key, leave blank to ignore
-  google_analytics_key: UA-xxxx-x
-
-  # Profile links, leave blank to ignore
-  social: 
-    github: khala-wan
-    # twitter: gayanvirajith
-    # facebook: gayanvirajith
-    # gplus: +GayanVirajith
-    # dribble: gayan
-    pinterest: 
-  # Toggle disclaimer in footer
-  show_disclaimer: true
-
-# Conversion / Build settings 
-markdown:    kramdown
-# This is how you put pygments config in jekyll 2.0 instead of pygments: true
-highlighter: pygments 
-
-# Permalinks
-permalink:        pretty
-
-exclude: 
-  - CNAME
-  - Gemfile
-  - Rakefile
-  - README.md
-  - .gitignore
-  - .sass-cache
-  - Gemfile.lock
-
-# Sass conversion configs
-sass:
-    sass_dir: assets/css/_sass
-    style: :compressed
+paginate: 10
+excerpt_separator: "\n\n\n" # excerpt ends after two blank lines
+permalink: pretty
+defaults: [{scope: {path: ""}, values: {layout: "default"}}, {scope: {path: "", type: "posts"}, values: {comments: true}}]
+gems: [jekyll-feed, jekyll-paginate] # include feed plugin (supported by gh-pages)
