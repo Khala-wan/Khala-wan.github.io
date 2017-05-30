@@ -95,6 +95,7 @@ Class overlayClass = NSClassFromString(@"UIDebuggingInformationOverlay");
 id obj = [overlayClass performSelector:NSSelectorFromString(@"overlay")];
 //呼出UIDebuggingInformationOverlay窗口
 [obj performSelector:NSSelectorFromString(@"toggleVisibility")];
+
 ```
 Swift:
 ``` swift
