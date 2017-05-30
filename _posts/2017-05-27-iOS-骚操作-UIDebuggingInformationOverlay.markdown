@@ -21,7 +21,7 @@ UIDebuggingInformationOverlay是一个私有的UIWindow的子类。它的作用�
 * Spec Compare
 * System Color Audit（暂时没发现有什么用）
 
-![img](http://pic40.nipic.com/20140412/11857649_170524977000_2.jpg)
+![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-1.jpg)
 
 ## View Hierarchy (查看视图层级)
 View Hierarchy可以帮我们查看当前控制器视图的层级关系，之前这些工作是Reval和Xcode的Debug View Hierarchy（断点调试）来帮我们完成的。Reval确实很好用，但它毕竟是一个第三方应用。相对来说，我更愿意使用Apple自己的工具。（摊手）
