@@ -1,7 +1,5 @@
 ---
-layout: page
 title:  About me
-permalink: /about/
 ---
 
 嗨，我是万圣(@Khala-wan), 一个iOS/MacOS 开发者. 其实我什么都想干，py/web/小程序/什么乱七八糟的都能吹两句（也真就只是吹两下 哈哈）。
