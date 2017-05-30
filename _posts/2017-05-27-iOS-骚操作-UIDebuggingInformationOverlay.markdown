@@ -44,9 +44,9 @@ View Hierarchy可以帮我们查看当前控制器视图的层级关系，之前
 ## VC Hierarchy (查看控制器层级)
 
 这个功能可以帮助你定位当前Winow的控制器关系，同时他也可以看出你Present之后的控制器层级关系。
-<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-7.jpg"/>
+<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-7.jpg"/></div>
 同样的，点击某一个你想要关注的VC就可以看到它对应的一些信息。也可以继续点击它的UIView来查看这个控制器所对应UIView的信息。
-<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-8.jpg"/>
+<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-8.jpg"/></div>
 
 ## Ivar Explorer （变量浏览）
 
@@ -76,8 +76,11 @@ var needToMessage:Bool = false
 
 ## Spec Compare (UI对比工具)
 这个功能可以让我们在对比UI图和实际开发出来的界面时不用两个页面看来看去。只需要从相册选择你这个页面的UI截图。然后向下滑动就可以增加透明度以比对细节。效果如下(UI图我找不到了。先用系统的凑合下)：
-<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-15.jpg"/></div>
-<div align="center"><img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-16.jpg"/></div>
+<div align="center">
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-15.jpg"/>
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-16.jpg"/>
+</div>
+<!--<div align="center"></div>-->
 
 >⚠️注意因为要弹出UIImagePickerController所以在iOS9以上别忘了在Info.plist中加入相册使用的key:NSPhotoLibraryUsageDescription。否侧会闪退。
 
