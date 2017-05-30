@@ -42,7 +42,7 @@ harmony:
   show_disclaimer: true
 
 # Conversion / Build settings 
-markdown:    Marxico
+markdown:    redcarpet
 # This is how you put pygments config in jekyll 2.0 instead of pygments: true
 highlighter: pygments 
 
