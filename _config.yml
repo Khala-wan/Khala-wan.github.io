@@ -6,7 +6,7 @@ url: "https://khala-wan.github.io"
 #baseurl: "/contrast" # comment out if in root directory
 
 comments:
-  disqus: "niklasbuschmann"
+  # disqus: "niklasbuschmann"
 #  isso: "comments.mysite.org"
 
 style:
