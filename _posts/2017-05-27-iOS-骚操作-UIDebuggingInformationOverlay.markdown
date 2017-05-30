@@ -11,7 +11,7 @@ categories:
 
 UIDebuggingInformationOverlay是一个私有的UIWindow的子类。它的作用就是用来帮助iOS的开发人员和设计人员用来调试自己的APP。值得一提的是这个功能(Window)是个私有类。是前几天才被Ryan Peterson在浏览UIKit的私有头文件的时候发现并公布给大家。这是他的英文原文博客[UIDebuggingInformationOverlay](http://ryanipete.com/blog/ios/swift/objective-c/uidebugginginformationoverlay/).
 
-<img style="margin:auto 0;text-align: center" width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-0.jpg"/>
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-0.jpg"/>
 
 
 ## UIDebuggingInformationOverlay能帮我们干什么
@@ -25,32 +25,32 @@ UIDebuggingInformationOverlay是一个私有的UIWindow的子类。它的作用�
 * Spec Compare
 * System Color Audit（暂时没发现有什么用）
 
-<img style="margin:auto 0;text-align: center" width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-1.jpg"/>
-
+![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-1.jpg)
 
 ## View Hierarchy (查看视图层级)
 
 View Hierarchy可以帮我们查看当前控制器视图的层级关系，之前这些工作是Reval和Xcode的Debug View Hierarchy（断点调试）来帮我们完成的。Reval确实很好用，但它毕竟是一个第三方应用。相对来说，我更愿意使用Apple自己的工具。（摊手）
 如图：
 
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-2.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-2.jpg"/>
+
 
 点击Change Current Window可以切换当前Debug的主Window（如果你有多个window的话）。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-3.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-3.jpg"/>
 下面的图以某个UIImageView为例：
 点击单个View层右侧的按钮可以详细查看这个View的类型、不透明度（可调节）、变量、状态等等。一般我们比较关注的是某个View的Frame。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-4.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-4.jpg"/>
 查看View的变量可以找到这个类对应的属性值和我们所关心的数值进行比对。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-5.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-5.jpg"/>
 查看状态信息可以看到这个View的类型和一些纯视图的属性如Transform等。不过每种类型的View其State Info中的Value的类型、数量也不同。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-6.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-6.jpg"/>
 
 ## VC Hierarchy (查看控制器层级)
 
 这个功能可以帮助你定位当前Winow的控制器关系，同时他也可以看出你Present之后的控制器层级关系。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-7.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-7.jpg"/>
 同样的，点击某一个你想要关注的VC就可以看到它对应的一些信息。也可以继续点击它的UIView来查看这个控制器所对应UIView的信息。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-8.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-8.jpg"/>
 
 ## Ivar Explorer （变量浏览）
 
@@ -62,15 +62,15 @@ var needToMessage:Bool = false
 ```
 然后我们现在来想办法找到它，看看能不能看到它的值。首先进入Ivar Explorer。
 然后找到UIApplication的delegate对象。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-9.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-9.jpg"/>
 点击去看一下，第二个就是我们要找的变量。当前它的值是NO，看来我们不需要跳转到消息中心了。
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-10.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-10.jpg"/>
 至于你还想在你的APP中看到哪个对象的哪个变量就看你自己的咯~
 
 ## Measure (测量工具)
 
 呃。。。讲真的这个功能绝对是我们和UI撕逼的双刃剑。有了它，你不用再因为那么0.5px的问题争论半天。但是如果UI会用它了，那么你可能还要多几个0.5px的问题😂
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-11.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-11.jpg"/>
 点击Vertical并长按你想测量的地方就可以显示出垂直方向上对应的间距，还可以按住不动拖动手指测量别的地方。
 ![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-12.jpg)
 如果想测量水平方向，你懂得，点Horizontal。
@@ -80,7 +80,8 @@ var needToMessage:Bool = false
 
 ## Spec Compare (UI对比工具)
 这个功能可以让我们在对比UI图和实际开发出来的界面时不用两个页面看来看去。只需要从相册选择你这个页面的UI截图。然后向下滑动就可以增加透明度以比对细节。效果如下(UI图我找不到了。先用系统的凑合下)：
-![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-15.jpg)![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-16.jpg)
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-15.jpg"/>
+<img width="300" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/UIDebuggingInformationOverlay-16.jpg"/>
 
 >⚠️注意因为要弹出UIImagePickerController所以在iOS9以上别忘了在Info.plist中加入相册使用的key:NSPhotoLibraryUsageDescription。否侧会闪退。
 
