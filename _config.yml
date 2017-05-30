@@ -29,6 +29,7 @@ links:
   # - youtube: {url: "https://www.youtube.com/user/me", square: true}
   # - tumblr: {url: "http://me.tumblr.com/", square: true}
   - steam: {url: "http://steamcommunity.com/profiles/76561198086573396/", square: true}
+  - sina: {url: "http://weibo.com/u/2506284730/home?wvr=5", square: true}
 
 paginate: 10
 excerpt_separator: "\n\n\n" # excerpt ends after two blank lines
