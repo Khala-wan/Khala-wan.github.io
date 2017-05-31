@@ -17,11 +17,12 @@ BookMarkData是Foundation中一个数据类型。它能帮助我们让沙盒化�
 * 其他
 
 正如我们创建了一个新的MacOS App的项目后看到的沙盒配置页面。
-<div align="center"><img width="500" height="400" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/BookMark/0.jpg"/></div>
+<div align="center"><img style="border: 1px solid #dcdcdc" width="500" height="300" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/BookMark/0.jpg"/></div>
 
 ## 遇到的问题
 我在开发自己的MacOS APP的时候发现了这样的问题：我在沙盒中配置了用户选择的文件的读写权限。之后利用NSOpenPanel选中某个文件后读取其中的信息。这在每次选择之后都是可以完成的。但是当我把该文件的URL存入DB后。想让APP下一次启动之后再去读取这个文件时就出现了问题。
 >报错：Operation cannot be completed
+
 仔细想了一下应该还是权限问题，于是验证：再一次通过NSOpenPanel选择这个文件之后又可以正常读取了。
 之后听朋友说这个功能需要用bookmark实现。于是果断尝试bookmark
 
@@ -52,8 +53,11 @@ OK.继续说我们的BookMark。我们通过URL创建了BookMarkData。也存了
 public init?(resolvingBookmarkData data: Data, options: URL.BookmarkResolutionOptions = default, relativeTo url: URL? = default, bookmarkDataIsStale: inout Bool) throws
 ``` 
 通过传入我们之前存DB的BookMarkData和指定的配置。就可以得到我们之前获取到的文件地址。
+
 **relativeTo url** 是我们BookMarkData对应的baseURL。可以传nil使用默认值
+
 **bookmarkDataIsStale** 标识BookMarkData是否过期，如果过期还需要重新创建。
+
 通过BookMark解析出的fileURL有个很好的好处：当用户修改了这个文件的地址。那么我们再次生成的fileURL也会随之改变。这样帮我们省了很多麻烦。
 
 ## 使用BookMark生成的URL访问文件
@@ -68,25 +72,27 @@ public func stopAccessingSecurityScopedResource()
 在我们要开始读取文件的时候要先调用startAccessingSecurityScopedResource()方法。让我们进入安全访问范围。然后就可读取文件了：
 ``` swift
 func exportFileExists(path:URL)->Bool{
-guard !path.absoluteString.contains(".Trash") else {
-return false
-}
-_ = path.startAccessingSecurityScopedResource()
-do{
-let result = try self.contentsOfDirectory(at: path.deletingLastPathComponent(), includingPropertiesForKeys: nil, options: .skipsHiddenFiles).filter({ (url) -> Bool in
-let fileName:String = url.lastPathComponent
-return fileName.contains("txt")
-})
-path.stopAccessingSecurityScopedResource()
-return result.count > 0
-}catch{
-path.stopAccessingSecurityScopedResource()
-return false
-}
+    guard !path.absoluteString.contains(".Trash") else {
+        return false
+    }
+    _ = path.startAccessingSecurityScopedResource()
+    do{
+        let result = try self.contentsOfDirectory(at: path.deletingLastPathComponent(), includingPropertiesForKeys: nil, options: .skipsHiddenFiles).filter({ (url) -> Bool in
+        let fileName:String = url.lastPathComponent
+        return fileName.contains("txt")
+        })
+        path.stopAccessingSecurityScopedResource()
+        return result.count > 0
+    }catch{
+        path.stopAccessingSecurityScopedResource()
+        return false
+    }
 }
 ``` 
 >⚠️⚠️⚠️注意：
+
 >1.使用startAccessingSecurityScopedResource()时必须要和stopAccessingSecurityScopedResource()配套使用进行平衡。如果不这样的话会造成泄漏。后果你不想看到的。
+
 >2.虽然这两个方法看上去像retain和release。但是它们并不是操作了引用计数哟。
 
 ## 最后
