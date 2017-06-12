@@ -15,7 +15,7 @@ style:
   padding: 30%
   nav: "#222"
   articles: 'stripe' # 'light' 'dark' and 'stripe' possible
-  uppercase: true
+  uppercase: false
 
 # see http://fontawesome.io/icons/#brand for all possible icons
 # notice: squared icons only work if supported by font-awesome
