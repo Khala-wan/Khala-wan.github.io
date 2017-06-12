@@ -88,7 +88,7 @@ var needToMessage:Bool = false
 
 说了那么多，那么要怎么使用它呢。
 
-OC：
+OC： 
 ```objective-c
 Class overlayClass = NSClassFromString(@"UIDebuggingInformationOverlay");
 
