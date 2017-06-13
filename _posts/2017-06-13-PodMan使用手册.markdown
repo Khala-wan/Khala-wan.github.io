@@ -4,7 +4,7 @@ date:   2017-06-13 16:36:40
 categories: APP 
 ---
 
-《PodMan使用手册》是我的MacOS APP：PodMan的使用介绍。如果在使用上有什么不明白的可以参考这篇文章。
+《PodMan使用手册》是我的MacOS APP：PodMan 的使用介绍。如果在使用上有什么不明白的可以参考这篇文章。
 
 
 
@@ -107,7 +107,7 @@ Release功能会根据你的设置判断当前这个Pod项目是否是私有项�
 <div align="center"><img width="400" height="70" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/PodMan/8.png"/></div>
 
 
-#写在最后
+# 写在最后
 
 **PodMan**是我迈入MacOS开发的第一个APP。使用了Xcode9和Swift4.0，耗时大半个月。在体验和技术细节上还有不足之处。欢迎issue 、 PR等一切让PodMan变得更好的方式~。谢谢大家。
 
