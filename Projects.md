@@ -21,7 +21,7 @@ title:  Projects
 <span style="display: flex;font-size: 16px;font-weight: bold;vertical-align: bottom;align-items: flex-end">2017-06-23</span>
 </div>
 
-<a href="https://github.com/Khala-wan/PodMan">
+<a href="https://github.com/Khala-wan/Slarder">
 <img width="315" height="49" src="https://github.com/Khala-wan/Slarder/raw/master/resources/logo.png"/>
 </a>
 
