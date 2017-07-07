@@ -1,5 +1,5 @@
 ---
-title:  "CoreData-Invalid redeclaration of 'XXX'"
+title:  "CoreData-Invalid redeclaration of ‘XXX’"
 date:   2017-05-31 15:13:21
 categories: CoreData 
 ---
