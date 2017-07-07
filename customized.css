@@ -21,3 +21,7 @@ input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
+.gitment-editor-tabs 
+{
+	margin-top:0;
+}
