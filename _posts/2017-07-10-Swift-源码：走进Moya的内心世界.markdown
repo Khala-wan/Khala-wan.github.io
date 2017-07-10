@@ -5,7 +5,7 @@ categories: Swift
 ---
 
 <div align="center">
-	<img height="160" src="https://github.com/Moya/Moya/raw/master/web/logo_github.png" />
+	<img style="height:160px" src="https://github.com/Moya/Moya/raw/master/web/logo_github.png" />
 </div>
 
 [Moya](https://github.com/Moya/Moya)是一个基于[Alamofire](https://github.com/Alamofire/Alamofire)的网络层封装，让我们不用关心Alamofire的内部实现，相对于为我们提供了更高等级的API。Moya在业务解耦，API管理，测试等方便都有不错的表现。
