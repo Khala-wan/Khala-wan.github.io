@@ -3,19 +3,18 @@ title:  "源码：走进Moya的内心世界"
 date:   2017-07-10 17:46:01
 categories: Swift 
 ---
-
-
-
-
-
-
-
-
-
 <p align="center">
   <img height="160" src="https://github.com/Moya/Moya/raw/master/web/logo_github.png" />
 </p>
 [Moya](https://github.com/Moya/Moya)是一个基于[Alamofire](https://github.com/Alamofire/Alamofire)的网络层封装，让我们不用关心Alamofire的内部实现，相对于为我们提供了更高等级的API。Moya在业务解耦，API管理，测试等方便都有不错的表现。
+
+
+
+
+
+
+
+
 >注意：本文默认你已经熟悉Moya的基本使用，内容不会按照使用教学的顺序来，所以如果你还没有使用过Moya，那么建议你下载[Moya](https://github.com/Moya/Moya) 的Demo看看，或者去查看它的[文档](https://github.com/Moya/Moya/tree/master/docs)，内容还是很详细的。
 
 ##MoyaProvider
