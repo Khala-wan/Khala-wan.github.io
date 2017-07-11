@@ -1,6 +1,9 @@
-#toc a{
+
+#toc {
 	position: fixed;
 	top: 210px;
+}
+#toc a{
 	width: 18%;
     overflow: hidden;
     text-overflow: ellipsis;
