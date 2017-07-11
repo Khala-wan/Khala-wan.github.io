@@ -1,21 +1,23 @@
 ---
 layout: blank
 ---
+
+<div id="left-menu">
+  <div id="menu-pannel">
+    <div id="toc"></div>
+      <link rel="stylesheet" href="http://khala-wan.com/left-menu.css">
+      <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+      <script src="http://khala-wan.com/toc.js"></script>
+      <script type="application/x-javascript">
+      $(document).ready(function() {
+        $('#toc').toc();
+      });
+    </script>
+  </div>>
+</div>>
+
 <main>
   <article class="{% if site.style.articles == 'stripe' %}light{% else %}{{ site.style.articles }}{% endif %}">
-    <div id="left-menu">
-      <div id="menu-pannel">
-        <div id="toc"></div>
-        <link rel="stylesheet" href="http://khala-wan.com/left-menu.css">
-        <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
-        <script src="http://khala-wan.com/toc.js"></script>
-        <script type="application/x-javascript">
-        $(document).ready(function() {
-          $('#toc').toc();
-        });
-        </script>
-      </div>>
-    </div>>
     <header>
       <h2><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a></h2>
       <span>{% if page.author %}{{ page.author }} • {% endif %}{% if page.date %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>{% endif %}{% if page.categories and {{page.categories}} != empty %} • {{ page.categories | array_to_sentence_string }}{% endif %}</span>
