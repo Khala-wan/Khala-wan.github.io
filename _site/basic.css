@@ -1,0 +1,91 @@
+body {
+  font-family: "Source Sans Pro";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.65;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300; }
+
+strong, a, b, th {
+  font-weight: 400; }
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 2px; }
+
+address, time {
+  font-style: normal;
+  color: #949494; }
+
+pre {
+  background-color: rgba(34, 34, 34, 0.75);
+  color: white;
+  border-radius: 2px;
+  font-size: 0.7em;
+  padding: 0.5em 1em;
+  white-space: pre-wrap; }
+
+blockquote {
+  border-left: 5px solid #4b6fff;
+  padding-left: 1.5em;
+  margin: 0; }
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+  transition: color 0.2s ease-out; }
+  a.selected, a:hover {
+    color: #949494; }
+
+a.ghost {
+  background-color: #57f;
+  color: white;
+  border: 2px solid #57f;
+  border-radius: 2px;
+  transition: 0.1s; }
+
+a.ghost:hover {
+  background-color: inherit;
+  color: #4b6fff; }
+
+article a {
+  color: #68f; }
+
+header a {
+  font-family: "Gentium Basic";
+  font-size: 1.1em;
+  line-height: 1.1em;
+  color: inherit; }
+
+body, aside, main {
+  flex-direction: column; }
+
+header, footer, aside li {
+  padding: 0.5em 1.5em; }
+
+main {
+  flex-grow: 1; }
+
+table {
+  border-spacing: 1px;
+  box-shadow: 0px 0px 0px 1px rgba(148, 148, 148, 0.16) inset; }
+
+tr:hover {
+  background: rgba(148, 148, 148, 0.06); }
+
+th, td {
+  box-shadow: 0px 0px 0px 1px rgba(148, 148, 148, 0.16);
+  padding: 0.5em 1em; }
+
+.light {
+  color: black;
+  background-color: #ffffff; }
+
+.dark {
+  color: white;
+  background-color: #282828; }

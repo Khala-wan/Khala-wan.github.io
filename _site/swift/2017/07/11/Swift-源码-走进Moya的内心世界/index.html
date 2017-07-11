@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="author" content="万圣">
+<meta name="description" content="这里放满了胡思乱想">
+<title> 源码：走进Moya的内心世界 › Khala-Wan`</title>
+<link rel="canonical" href="http://localhost:4000/swift/2017/07/11/Swift-%E6%BA%90%E7%A0%81-%E8%B5%B0%E8%BF%9BMoya%E7%9A%84%E5%86%85%E5%BF%83%E4%B8%96%E7%95%8C/">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,300italic,400italic" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Gentium+Basic:400,400italic" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/basic.css" rel="stylesheet">
+<link href="/highlight.css" rel="stylesheet">
+<link href="/index.css" rel="stylesheet">
+<link href="/customized.css" rel="stylesheet">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Khala-Wan`" />
+
+
+<header>
+  <h1><a href="/">Khala-Wan`</a></h1>
+  <nav>
+    <li><a href="/">Home</a></li><li><a href="/Projects/">Projects</a></li><li><a href="/about/">About me</a></li><li><a href="/archive/">Archive</a></li>
+  </nav>
+</header>
+<main>
+  <article class="light">
+    <div id="toc"></div>
+    	<script src="/toc.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+    		$('#toc').toc();
+		</script>
+    <header id="123">
+      <h2><a href="/swift/2017/07/11/Swift-%E6%BA%90%E7%A0%81-%E8%B5%B0%E8%BF%9BMoya%E7%9A%84%E5%86%85%E5%BF%83%E4%B8%96%E7%95%8C/">源码：走进Moya的内心世界</a></h2>
+      <span><time datetime="2017-07-11T01:46:01+08:00">Jul 11, 2017</time> • Swift</span>
+    </header>
+    <div>
+<div align="center">
+	<img style="height:160px" src="https://github.com/Moya/Moya/raw/master/web/logo_github.png" />
+</div>
+
+<p><a href="https://github.com/Moya/Moya">Moya</a>是一个基于<a href="https://github.com/Alamofire/Alamofire">Alamofire</a>的网络层封装，让我们不用关心Alamofire的内部实现，相对于为我们提供了更高等级的API。Moya在业务解耦，API管理，测试等方面都有不错的表现。</p>
+
+<blockquote>
+  <p>注意：本文默认你已经熟悉Moya的基本使用，内容不会按照使用教学的顺序来，所以如果你还没有使用过Moya，那么建议你下载<a href="https://github.com/Moya/Moya">Moya</a> 的Demo看看，或者去查看它的<a href="https://github.com/Moya/Moya/tree/master/docs">文档</a>，内容还是很详细的。</p>
+</blockquote>
+
+<h2 id="moyaprovider">MoyaProvider</h2>
+
+<p>MoyaProvider是Moya的基础，它是你API的端点的管理者。Moya的所有功能都是通过MoyaProvider来使用。首先我们先来看一下它的定义：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Request provider class. Requests should be made through this class only.</span>
+<span class="n">open</span> <span class="kd">class</span> <span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">Target</span><span class="p">:</span> <span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">{</span>
+
+    <span class="c1">/// Closure that defines the endpoints for the provider.</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">EndpointClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span>
+
+    <span class="c1">/// Closure that decides if and what request should be performed</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RequestResultClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URLRequest</span><span class="p">,</span> <span class="kt">MoyaError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+
+    <span class="c1">/// Closure that resolves an `Endpoint` into a `RequestResult`.</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RequestClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span><span class="p">,</span> <span class="kd">@escaping</span> <span class="kt">RequestResultClosure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+
+    <span class="c1">/// Closure that decides if/how a request should be stubbed.</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">StubClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">StubBehavior</span>
+
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">endpointClosure</span><span class="p">:</span> <span class="kt">EndpointClosure</span>
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">requestClosure</span><span class="p">:</span> <span class="kt">RequestClosure</span>
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">stubClosure</span><span class="p">:</span> <span class="kt">StubClosure</span>
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">manager</span><span class="p">:</span> <span class="kt">Manager</span>
+
+    <span class="c1">/// A list of plugins</span>
+    <span class="c1">/// e.g. for logging, network activity indicator or credentials</span>
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">plugins</span><span class="p">:</span> <span class="p">[</span><span class="kt">PluginType</span><span class="p">]</span>
+
+    <span class="n">open</span> <span class="k">let</span> <span class="nv">trackInflights</span><span class="p">:</span> <span class="kt">Bool</span>
+
+    <span class="n">open</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">inflightRequests</span><span class="p">:</span> <span class="p">[</span><span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span><span class="p">:</span> <span class="p">[</span><span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[:]</span>
+
+    <span class="c1">/// Initializes a provider.</span>
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">endpointClosure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">EndpointClosure</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">.</span><span class="n">defaultEndpointMapping</span><span class="p">,</span>
+                <span class="nv">requestClosure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">RequestClosure</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">.</span><span class="n">defaultRequestMapping</span><span class="p">,</span>
+                <span class="nv">stubClosure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">StubClosure</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">.</span><span class="n">neverStub</span><span class="p">,</span>
+                <span class="nv">manager</span><span class="p">:</span> <span class="kt">Manager</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;.</span><span class="nf">defaultAlamofireManager</span><span class="p">(),</span>
+                <span class="nv">plugins</span><span class="p">:</span> <span class="p">[</span><span class="kt">PluginType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+                <span class="nv">trackInflights</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">self</span><span class="o">.</span><span class="n">endpointClosure</span> <span class="o">=</span> <span class="n">endpointClosure</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">requestClosure</span> <span class="o">=</span> <span class="n">requestClosure</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">stubClosure</span> <span class="o">=</span> <span class="n">stubClosure</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">plugins</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">trackInflights</span> <span class="o">=</span> <span class="n">trackInflights</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Returns an `Endpoint` based on the token, method, and parameters by invoking the `endpointClosure`.</span>
+    <span class="n">open</span> <span class="kd">func</span> <span class="nf">endpoint</span><span class="p">(</span><span class="n">_</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">endpointClosure</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Designated request-making method. Returns a `Cancellable` token to cancel the request later.</span>
+    <span class="kd">@discardableResult</span>
+    <span class="n">open</span> <span class="kd">func</span> <span class="nf">request</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Target</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">completion</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Designated request-making method with queue option. Returns a `Cancellable` token to cancel the request later.</span>
+    <span class="kd">@discardableResult</span>
+    <span class="n">open</span> <span class="kd">func</span> <span class="nf">request</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Target</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">ProgressBlock</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">requestNormal</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="n">queue</span><span class="p">,</span> <span class="nv">progress</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">completion</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// When overriding this method, take care to `notifyPluginsOfImpendingStub` and to perform the stub using the `createStubFunction` method.</span>
+    <span class="c1">/// Note: this was previously in an extension, however it must be in the original class declaration to allow subclasses to override.</span>
+    <span class="kd">@discardableResult</span>
+    <span class="n">open</span> <span class="kd">func</span> <span class="nf">stubRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span><span class="p">,</span> <span class="nv">endpoint</span><span class="p">:</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">stubBehavior</span><span class="p">:</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">StubBehavior</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CancellableToken</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cancellableToken</span> <span class="o">=</span> <span class="kt">CancellableToken</span> <span class="p">{</span> <span class="p">}</span>
+        <span class="nf">notifyPluginsOfImpendingStub</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">plugins</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">plugins</span>
+        <span class="k">let</span> <span class="nv">stub</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="nf">createStubFunction</span><span class="p">(</span><span class="n">cancellableToken</span><span class="p">,</span> <span class="nv">forTarget</span><span class="p">:</span> <span class="n">target</span><span class="p">,</span> <span class="nv">withCompletion</span><span class="p">:</span> <span class="n">completion</span><span class="p">,</span> <span class="nv">endpoint</span><span class="p">:</span> <span class="n">endpoint</span><span class="p">,</span> <span class="nv">plugins</span><span class="p">:</span> <span class="n">plugins</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">switch</span> <span class="n">stubBehavior</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">immediate</span><span class="p">:</span>
+            <span class="nf">stub</span><span class="p">()</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">delayed</span><span class="p">(</span><span class="k">let</span> <span class="nv">delay</span><span class="p">):</span>
+            <span class="k">let</span> <span class="nv">killTimeOffset</span> <span class="o">=</span> <span class="kt">Int64</span><span class="p">(</span><span class="kt">CDouble</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span> <span class="o">*</span> <span class="kt">CDouble</span><span class="p">(</span><span class="kt">NSEC_PER_SEC</span><span class="p">))</span>
+            <span class="k">let</span> <span class="nv">killTime</span> <span class="o">=</span> <span class="kt">DispatchTime</span><span class="o">.</span><span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="kt">Double</span><span class="p">(</span><span class="n">killTimeOffset</span><span class="p">)</span> <span class="o">/</span> <span class="kt">Double</span><span class="p">(</span><span class="kt">NSEC_PER_SEC</span><span class="p">)</span>
+            <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">asyncAfter</span><span class="p">(</span><span class="nv">deadline</span><span class="p">:</span> <span class="n">killTime</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nf">stub</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">never</span><span class="p">:</span>
+            <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Method called to stub request when stubbing is disabled."</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">cancellableToken</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>代码比较长，我们分开来进行分析。</p>
+
+<h3 id="定义">定义</h3>
+<p>首先我们来看看MoyaProvider的定义如下：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">Target</span><span class="p">:</span> <span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">{}</span>
+</code></pre>
+</div>
+<p>可以看到，MoyaProvider是一个使用了<code class="highlighter-rouge">泛型</code>的类。接收一个遵守<a href="#0">TargetType</a>的类型。</p>
+
+<h2 id="moyaprovdier的属性">MoyaProvdier的属性</h2>
+<p>MoyaProvdier有如下属性：</p>
+<h3 id="endpointclosure">EndpointClosure</h3>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Closure that defines the endpoints for the provider.</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">EndpointClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span>
+</code></pre>
+</div>
+<p>EndpointClosure属性是一个闭包，用于让我们对Moya生成的<a href="#1">Endpoint</a>进行一些我们自己的定制然后返回一个Endpoint类，例如：我们想增加一个新的HttpHeader：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> <span class="nv">endpointClosure</span> <span class="o">=</span> <span class="p">{</span> <span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="kt">MyTarget</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">MyTarget</span><span class="o">&gt;</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">defaultEndpoint</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">.</span><span class="nf">defaultEndpointMapping</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">defaultEndpoint</span><span class="o">.</span><span class="nf">adding</span><span class="p">(</span><span class="nv">newHTTPHeaderFields</span><span class="p">:</span> <span class="p">[</span><span class="s">"APP_NAME"</span><span class="p">:</span> <span class="s">"MY_AWESOME_APP"</span><span class="p">])</span>
+<span class="p">}</span>
+<span class="k">let</span> <span class="nv">provider</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">GitHub</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">endpointClosure</span><span class="p">:</span> <span class="n">endpointClosure</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>通过闭包对属性的操作可以很大程度上明确我们的代码结构并减少不必要的coding。</p>
+
+<h3 id="requestclosure--requestresultclosure">RequestClosure &amp;&amp; RequestResultClosure</h3>
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Closure that decides if and what request should be performed</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RequestResultClosure</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URLRequest</span><span class="p">,</span> <span class="kt">MoyaError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+</code></pre>
+</div>
+<p>同上，这是个闭包属性，入参的类型可能有小伙伴不熟悉，这是使用了<a href="https://github.com/antitypical/Result">Result</a>框架,用来将<code class="highlighter-rouge">throw</code>的方式换成<code class="highlighter-rouge">Result&lt;data,error&gt;</code>的方式返回。</p>
+
+<p>利用这个闭包我们可以进行请求映射，在请求发起之前修改我们的请求然后将一个RequestResultClosure回调出去，例如：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="k">let</span> <span class="nv">requestClosure</span> <span class="o">=</span> <span class="p">{</span> <span class="p">(</span><span class="nv">endpoint</span><span class="p">:</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">GitHub</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">done</span><span class="p">:</span> <span class="kt">MoyaProvider</span><span class="o">.</span><span class="kt">RequestResultClosure</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">var</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">urlRequest</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">httpShouldHandleCookies</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nf">done</span><span class="p">(</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="k">let</span> <span class="nv">provider</span> <span class="o">=</span> <span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">GitHub</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">requestClosure</span><span class="p">:</span> <span class="n">requestClosure</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>这样就让我们的请求不处理Cookies了.</p>
+
+<h2 id="moyaprovider的方法">MoyaProvider的方法</h2>
+<p>具体的方法在文档和demo中都有体现，就不多讲了，都是基础的调用。</p>
+
+<h2 id="moyaprovider---request">MoyaProvider -&gt; Request</h2>
+<p>重点来了，我们准备了那么多是不是要发请求了。我们配置的这些东西都是怎么工作的？下面我们走进Moya的内心世界</p>
+
+<h3 id="moyaprovider---endpoint">MoyaProvider -&gt; EndPoint</h3>
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultEndpointMapping</span><span class="p">(</span><span class="k">for</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">Endpoint</span><span class="p">(</span>
+            <span class="nv">url</span><span class="p">:</span> <span class="nf">url</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">absoluteString</span><span class="p">,</span>
+            <span class="nv">sampleResponseClosure</span><span class="p">:</span> <span class="p">{</span> <span class="o">.</span><span class="nf">networkResponse</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">sampleData</span><span class="p">)</span> <span class="p">},</span>
+            <span class="nv">method</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="nv">parameters</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
+            <span class="nv">parameterEncoding</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">parameterEncoding</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+<p>首先MoyaProvider通过这个方法生成了一个端点(Endpoint)。</p>
+
+<h3 id="requestmap">requestMap</h3>
+<p>随后Moya内部映射出一个URLRequest</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultRequestMapping</span><span class="p">(</span><span class="k">for</span> <span class="nv">endpoint</span><span class="p">:</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">Target</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">closure</span><span class="p">:</span> <span class="kt">RequestResultClosure</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">urlRequest</span> <span class="p">{</span>
+            <span class="nf">closure</span><span class="p">(</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">urlRequest</span><span class="p">))</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">closure</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="kt">MoyaError</span><span class="o">.</span><span class="nf">requestMapping</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">url</span><span class="p">)))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="moyaproviderrequest">MoyaProvider().request</h3>
+<p>代码很长，通过注释来看</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">requestNormal</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Target</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">ProgressBlock</span><span class="p">?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+        
+        <span class="c1">//生成端点</span>
+        <span class="k">let</span> <span class="nv">endpoint</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">endpoint</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="c1">//生成测试表现</span>
+        <span class="k">let</span> <span class="nv">stubBehavior</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">stubClosure</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="c1">//生成取消请求的Token</span>
+        <span class="k">let</span> <span class="nv">cancellableToken</span> <span class="o">=</span> <span class="kt">CancellableWrapper</span><span class="p">()</span>
+
+        <span class="c1">// 通过自定义的插件完善请求回调的闭包</span>
+        <span class="k">let</span> <span class="nv">pluginsWithCompletion</span><span class="p">:</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span> <span class="o">=</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="nv">processedResult</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$1</span><span class="o">.</span><span class="nf">process</span><span class="p">(</span><span class="nv">$0</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span> <span class="p">}</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="n">processedResult</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">//是否追踪运行中的请求</span>
+        <span class="k">if</span> <span class="n">trackInflights</span> <span class="p">{</span>
+            <span class="c1">//进入原子操作</span>
+            <span class="nf">objc_sync_enter</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+            <span class="c1">//保存请求端点</span>
+            <span class="k">var</span> <span class="nv">inflightCompletionBlocks</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span>
+            <span class="n">inflightCompletionBlocks</span><span class="p">?</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">pluginsWithCompletion</span><span class="p">)</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="o">=</span> <span class="n">inflightCompletionBlocks</span>
+            <span class="c1">//退出原子操作</span>
+            <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+            <span class="c1">//如果用正在运行中的CompletionBlock则取消本次请求，反之则记录本次请求</span>
+            <span class="k">if</span> <span class="n">inflightCompletionBlocks</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">cancellableToken</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nf">objc_sync_enter</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+                <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pluginsWithCompletion</span><span class="p">]</span>
+                <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="c1">//准备请求工作</span>
+        <span class="k">let</span> <span class="nv">performNetworking</span> <span class="o">=</span> <span class="p">{</span> <span class="p">(</span><span class="nv">requestResult</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URLRequest</span><span class="p">,</span> <span class="kt">MoyaError</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">in</span>
+            <span class="c1">//如果本次请求被取消了则返回</span>
+            <span class="k">if</span> <span class="n">cancellableToken</span><span class="o">.</span><span class="n">isCancelled</span> <span class="p">{</span>
+                <span class="k">self</span><span class="o">.</span><span class="nf">cancelCompletion</span><span class="p">(</span><span class="n">pluginsWithCompletion</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+
+            <span class="k">var</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="o">!</span>
+            <span class="c1">//模式匹配取出request</span>
+            <span class="k">switch</span> <span class="n">requestResult</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">urlRequest</span><span class="p">):</span>
+                <span class="n">request</span> <span class="o">=</span> <span class="n">urlRequest</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="nf">pluginsWithCompletion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+            
+            <span class="c1">// 通过自定义插件完善请求的闭包</span>
+            <span class="k">let</span> <span class="nv">preparedRequest</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$1</span><span class="o">.</span><span class="nf">prepare</span><span class="p">(</span><span class="nv">$0</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="n">target</span><span class="p">)</span> <span class="p">}</span>
+            
+            <span class="c1">//根据测试行为定制回调</span>
+            <span class="k">switch</span> <span class="n">stubBehavior</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">never</span><span class="p">:</span>
+                <span class="k">let</span> <span class="nv">networkCompletion</span><span class="p">:</span> <span class="kt">Moya</span><span class="o">.</span><span class="kt">Completion</span> <span class="o">=</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+                    <span class="k">if</span> <span class="k">self</span><span class="o">.</span><span class="n">trackInflights</span> <span class="p">{</span>
+                        <span class="c1">//移除追踪队列中的该请求</span>
+                        <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]?</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="nv">$0</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">}</span>
+
+                        <span class="nf">objc_sync_enter</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+                        <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="o">.</span><span class="nf">removeValue</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">endpoint</span><span class="p">)</span>
+                        <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nf">pluginsWithCompletion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="c1">//根据请求类型来通过Alamofire发起请求。</span>
+                <span class="k">switch</span> <span class="n">target</span><span class="o">.</span><span class="n">task</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nv">request</span><span class="p">:</span>
+                    <span class="n">cancellableToken</span><span class="o">.</span><span class="n">innerCancellable</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">sendRequest</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">preparedRequest</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="n">queue</span><span class="p">,</span> <span class="nv">progress</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">networkCompletion</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">upload</span><span class="p">(</span><span class="o">.</span><span class="nf">file</span><span class="p">(</span><span class="k">let</span> <span class="nv">file</span><span class="p">)):</span>
+                    <span class="n">cancellableToken</span><span class="o">.</span><span class="n">innerCancellable</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">sendUploadFile</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">preparedRequest</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="n">queue</span><span class="p">,</span> <span class="nv">file</span><span class="p">:</span> <span class="n">file</span><span class="p">,</span> <span class="nv">progress</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">networkCompletion</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">upload</span><span class="p">(</span><span class="o">.</span><span class="nf">multipart</span><span class="p">(</span><span class="k">let</span> <span class="nv">multipartBody</span><span class="p">)):</span>
+                    <span class="k">guard</span> <span class="o">!</span><span class="n">multipartBody</span><span class="o">.</span><span class="n">isEmpty</span> <span class="o">&amp;&amp;</span> <span class="n">target</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">supportsMultipart</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nf">fatalError</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">target</span><span class="se">)</span><span class="s"> is not a multipart upload target."</span><span class="p">)</span>
+                    <span class="p">}</span>
+                    <span class="n">cancellableToken</span><span class="o">.</span><span class="n">innerCancellable</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">sendUploadMultipart</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">preparedRequest</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="n">queue</span><span class="p">,</span> <span class="nv">multipartBody</span><span class="p">:</span> <span class="n">multipartBody</span><span class="p">,</span> <span class="nv">progress</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">networkCompletion</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="k">let</span> <span class="nv">destination</span><span class="p">)):</span>
+                    <span class="n">cancellableToken</span><span class="o">.</span><span class="n">innerCancellable</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">sendDownloadRequest</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">preparedRequest</span><span class="p">,</span> <span class="nv">queue</span><span class="p">:</span> <span class="n">queue</span><span class="p">,</span> <span class="nv">destination</span><span class="p">:</span> <span class="n">destination</span><span class="p">,</span> <span class="nv">progress</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">networkCompletion</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="n">cancellableToken</span><span class="o">.</span><span class="n">innerCancellable</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">stubRequest</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nv">request</span><span class="p">:</span> <span class="n">preparedRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+                    <span class="k">if</span> <span class="k">self</span><span class="o">.</span><span class="n">trackInflights</span> <span class="p">{</span>
+                        <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]?</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="nv">$0</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">}</span>
+
+                        <span class="nf">objc_sync_enter</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+                        <span class="k">self</span><span class="o">.</span><span class="n">inflightRequests</span><span class="o">.</span><span class="nf">removeValue</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">endpoint</span><span class="p">)</span>
+                        <span class="nf">objc_sync_exit</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nf">pluginsWithCompletion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">},</span> <span class="nv">endpoint</span><span class="p">:</span> <span class="n">endpoint</span><span class="p">,</span> <span class="nv">stubBehavior</span><span class="p">:</span> <span class="n">stubBehavior</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="c1">//调用我们队request的自定义设置</span>
+        <span class="nf">requestClosure</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">performNetworking</span><span class="p">)</span>
+		 <span class="c1">//返回一个可以被取消的请求Token</span>
+        <span class="k">return</span> <span class="n">cancellableToken</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+
+<h1 id="0"></h1>
+<h2 id="targettype">TargetType</h2>
+<p>TargetType是一个协议，它要求遵守者提供一些只读属性，这些属性正好是我们网络请求所需要的参数元素。
+属性如下：</p>
+
+<ul>
+  <li>BaseURL</li>
+  <li>Path</li>
+  <li>Method</li>
+  <li>Parameters</li>
+  <li>ParameterEncoding</li>
+  <li>SampleData (测试打桩时返回的数据)</li>
+  <li>Task （request、upload、download）</li>
+  <li>Validate （是否对参数进行校验 ，一般有手机号、邮箱号校验之类的）</li>
+</ul>
+
+<p>上面这些参数大家都不陌生，都是网络请求的基础要求参数。这样的设计使得我们在调用网络请求的时候不需要在方法中写上那么多入参。如：
+common:</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kt">MyAPI</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span><span class="kt">URL</span><span class="p">,</span><span class="nv">parameters</span><span class="p">:[</span><span class="kt">String</span><span class="p">:</span><span class="kt">Any</span><span class="p">],</span><span class="nv">method</span><span class="p">:</span><span class="kt">Method</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>Moya:</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kt">MoyaProvider</span><span class="o">&lt;</span><span class="kt">MyAPI</span><span class="o">&gt;</span><span class="p">()</span><span class="o">.</span><span class="nf">request</span><span class="p">()</span>
+</code></pre>
+</div>
+<p>如果参数很多的化简直是灾难，不得不说这个设计很赞。</p>
+
+<p>值得一提的是这里加入了两个很有意思的参数<code class="highlighter-rouge">SampleData</code>和<code class="highlighter-rouge">validate</code>,<code class="highlighter-rouge">SampleData</code>可以让我们在进行测试插桩的时候，剩下Mock返回数据的代码，只要我们设置了属性之后在测试的时候会自动返回。这样的设计真的很巧妙，让我们的测试变得更加轻松。（这也是我为什么选择使用Moya的原因，当然原因不止如此），另一个属性就是<code class="highlighter-rouge">Valiadate</code>，以前我们想要验证参数的合法性，可能会有如下方法：</p>
+
+<ul>
+  <li>在调用请求之前先校验，如果不合法就return</li>
+  <li>把一个这样的闭包：<strong>(你的参数) -&gt; (验证结果)</strong>当做一个参数传进request方法中。（我就是这样做的）</li>
+</ul>
+
+<p>如上两个方法都有各自的缺点。来看Moya的思路：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">validate</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span>
+	<span class="k">let</span> <span class="nv">phoneNumber</span><span class="p">:</span><span class="kt">String</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s">"phoneNumber"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">phoneNumber</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">11</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>通过闭包返回一个校验的值，一次性配置好以后都不用改了。实在是很便利。当然，看到这里你也许会有个疑惑，既然这个属性的值是<code class="highlighter-rouge">固定的</code>，那么是不是每一个API都要创建一个实例然后遵守TargetType，然后为了缩减代码还要创建一个<code class="highlighter-rouge">BaseAPI</code>之类的东西让其他的API对象来继承它？
+NONONO~，如果说使用泛型给MoyaProvider的灵活性奠定了基础，那么使用枚举Enum来定义管理API的方式就给Moya的灵活赋予了灵性。</p>
+
+<h2 id="使用enum来管理定义我们的apis">使用Enum来管理/定义我们的APIs</h2>
+<p>来看看Demo中的例子，Demo中有一个专门请求GithubAPI的模块。来看看是怎么定义这些API的：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">GitHub</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">zen</span>
+    <span class="k">case</span> <span class="nf">userProfile</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">userRepositories</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>通过枚举我们可以很清晰看出Giuhub模块中有哪些API，这样可以使我们的业务逻辑变得更加清晰。使用Enum的关联值来表示各个API的具体参数。这样我们是不是以后不需要再写注释和看文档了。😂好吧~其实还是要看文档的，当然这样的写法在一定程度上免去了我们可能会出现的困惑，也许几个月过去了，回头看代码突然忘了这个api的参数的时候，可以很明白的看出它是什么类型和作用。写到这里请让我感叹一句：<code class="highlighter-rouge">Swift大法好！</code></p>
+
+<p>更多的枚举高级用法请看Swiftgg翻译的文章：<a href="http://swift.gg/2015/11/20/advanced-practical-enum-examples/">Swift 中枚举高级用法及实践</a>。这篇文章我也读过，受益颇多，感谢Swiftgg翻译组。</p>
+
+<h1 id="1"></h1>
+<h2 id="端点endpoint">端点（Endpoint）</h2>
+
+<p>我们通过Moyaprovider实例而产生的一个API端点。通过这个端点我们可以发起请求，有点像AFN的<code class="highlighter-rouge">AFNSession</code>,借用Moya的文档原图，一次请求应该是这样发起的：</p>
+
+<p><img src="https://raw.github.com/Moya/Moya/master/web/pipeline.png" alt="Pipeline" /></p>
+
+<p><code class="highlighter-rouge">Target</code>很好理解就是我们之前说的带着各种参数属性的泛型对象。通过它，Moya进一步生成了与之对应的API Endpoint，随后通过<code class="highlighter-rouge">Endpoint</code>发起<code class="highlighter-rouge">Requset</code>.</p>
+
+<p>那么一个EndPoint包含什么呢？它包含着我们这次请求的所有信息，包括：</p>
+<ul>
+  <li>url</li>
+  <li>method</li>
+  <li>parameters</li>
+  <li>httpHeaderFields</li>
+  <li>等等</li>
+</ul>
+
+<h3 id="endpointrequest">Endpoint.request</h3>
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Extension for converting an `Endpoint` into an optional `URLRequest`.</span>
+<span class="kd">extension</span> <span class="kt">Endpoint</span> <span class="p">{</span>
+    <span class="c1">/// Returns the `Endpoint` converted to a `URLRequest` if valid. Returns `nil` otherwise.</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">urlRequest</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">requestURL</span> <span class="o">=</span> <span class="kt">Foundation</span><span class="o">.</span><span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+
+        <span class="k">var</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">requestURL</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">httpMethod</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">rawValue</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">allHTTPHeaderFields</span> <span class="o">=</span> <span class="n">httpHeaderFields</span>
+
+        <span class="k">return</span> <span class="k">try</span><span class="p">?</span> <span class="n">parameterEncoding</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nv">with</span><span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>在这段代码可以看到，Endpoint使用其内部的基本属性，将自己转换成了一个<code class="highlighter-rouge">URLRequest?</code>对象。</p>
+
+<h3 id="endpointa--endpointb-">EndpointA == EndpointB ?</h3>
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Required for using `Endpoint` as a key type in a `Dictionary`.</span>
+<span class="kd">extension</span> <span class="kt">Endpoint</span><span class="p">:</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">hashValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">urlRequest</span><span class="p">?</span><span class="o">.</span><span class="n">hashValue</span> <span class="p">??</span> <span class="n">url</span><span class="o">.</span><span class="n">hashValue</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Endpoint</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">lhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">rhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span> <span class="p">}</span>
+        <span class="k">if</span> <span class="n">lhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">rhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span> <span class="p">}</span>
+        <span class="k">if</span> <span class="n">lhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">rhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lhs</span><span class="o">.</span><span class="n">hashValue</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">hashValue</span> <span class="p">}</span>
+        <span class="nf">return</span> <span class="p">(</span><span class="n">lhs</span><span class="o">.</span><span class="n">urlRequest</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">urlRequest</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>遵守<code class="highlighter-rouge">Equatable</code>和<code class="highlighter-rouge">Hashable</code>协议并实现响应方法即可为自己的类提供<code class="highlighter-rouge">==</code>比较方法.这个对比方法用来追踪已经在请求中的request。排除多次无用请求。</p>
+<h3 id="可定制方法">可定制方法</h3>
+<p>其内部提供了几个API让我们可以为Endpoint新增<code class="highlighter-rouge">HttpHeader</code>、<code class="highlighter-rouge">NewParameter</code>、<code class="highlighter-rouge">newParameterEncoding</code></p>
+
+<h3 id="sampleresponseclosure">SampleResponseClosure</h3>
+<p>Endpoint有一个叫做SampleResponseClosure的属性，和之前的闭包类型参数差不多，这个参数用来返回定制的测试networkResponse。比如特定的<code class="highlighter-rouge">StautsCode</code>之类的。</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="c1">/// Used for stubbing responses.</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">EndpointSampleResponse</span> <span class="p">{</span>
+
+    <span class="c1">/// The network returned a response, including status code and data.</span>
+    <span class="k">case</span> <span class="nf">networkResponse</span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">Data</span><span class="p">)</span>
+
+    <span class="c1">/// The network returned response which can be fully customized.</span>
+    <span class="k">case</span> <span class="nf">response</span><span class="p">(</span><span class="kt">HTTPURLResponse</span><span class="p">,</span> <span class="kt">Data</span><span class="p">)</span>
+
+    <span class="c1">/// The network failed to send the request, or failed to retrieve a response (eg a timeout).</span>
+    <span class="k">case</span> <span class="nf">networkError</span><span class="p">(</span><span class="kt">NSError</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<h2 id="cancellable">Cancellable</h2>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">isCancelled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">cancel</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">internal</span> <span class="kd">class</span> <span class="kt">CancellableWrapper</span><span class="p">:</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+    <span class="kd">internal</span> <span class="k">var</span> <span class="nv">innerCancellable</span><span class="p">:</span> <span class="kt">Cancellable</span> <span class="o">=</span> <span class="kt">SimpleCancellable</span><span class="p">()</span>
+
+    <span class="k">var</span> <span class="nv">isCancelled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">return</span> <span class="n">innerCancellable</span><span class="o">.</span><span class="n">isCancelled</span> <span class="p">}</span>
+
+    <span class="kd">internal</span> <span class="kd">func</span> <span class="nf">cancel</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">innerCancellable</span><span class="o">.</span><span class="nf">cancel</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">internal</span> <span class="kd">class</span> <span class="kt">SimpleCancellable</span><span class="p">:</span> <span class="kt">Cancellable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">isCancelled</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">func</span> <span class="nf">cancel</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">isCancelled</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">CancellableToken</span><span class="p">:</span> <span class="kt">Cancellable</span><span class="p">,</span> <span class="kt">CustomDebugStringConvertible</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">cancelAction</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="k">let</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">Request</span><span class="p">?</span>
+    <span class="kd">public</span> <span class="nf">fileprivate</span><span class="p">(</span><span class="k">set</span><span class="p">)</span> <span class="k">var</span> <span class="nv">isCancelled</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="n">fileprivate</span> <span class="k">var</span> <span class="nv">lock</span><span class="p">:</span> <span class="kt">DispatchSemaphore</span> <span class="o">=</span> <span class="kt">DispatchSemaphore</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">cancel</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="nf">wait</span><span class="p">(</span><span class="nv">timeout</span><span class="p">:</span> <span class="kt">DispatchTime</span><span class="o">.</span><span class="n">distantFuture</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="p">{</span> <span class="n">lock</span><span class="o">.</span><span class="nf">signal</span><span class="p">()</span> <span class="p">}</span>
+        <span class="k">guard</span> <span class="o">!</span><span class="n">isCancelled</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="n">isCancelled</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="nf">cancelAction</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">cancelAction</span> <span class="o">=</span> <span class="n">action</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+
+    <span class="nf">init</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">request</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">cancelAction</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">request</span><span class="o">.</span><span class="nf">cancel</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">debugDescription</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">request</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="s">"Empty Request"</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">debugDescription</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre>
+</div>
+<p>Cancellable赋予了遵守者可以取消请求的方法。</p>
+
+<h2 id="stubbehavior">StubBehavior</h2>
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">StubBehavior</span> <span class="p">{</span>
+
+    <span class="c1">/// Do not stub.</span>
+    <span class="k">case</span> <span class="n">never</span>
+
+    <span class="c1">/// Return a response immediately.</span>
+    <span class="k">case</span> <span class="n">immediate</span>
+
+    <span class="c1">/// Return a response after a delay.</span>
+    <span class="k">case</span> <span class="nf">delayed</span><span class="p">(</span><span class="nv">seconds</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>这个不用多说，测试插桩时集中请求表现。</p>
+
+<h2 id="一些类型别名">一些类型别名</h2>
+<p>Moya是基于AF的，为了代码统一，所以针对一些AF的属性做了<code class="highlighter-rouge">typealias</code> 在<code class="highlighter-rouge">Moya+Alamofire</code>文件中可以看到：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Manager</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">SessionManager</span>
+<span class="kd">internal</span> <span class="kd">typealias</span> <span class="kt">Request</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">Request</span>
+<span class="kd">internal</span> <span class="kd">typealias</span> <span class="kt">DownloadRequest</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">DownloadRequest</span>
+<span class="kd">internal</span> <span class="kd">typealias</span> <span class="kt">UploadRequest</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">UploadRequest</span>
+<span class="kd">internal</span> <span class="kd">typealias</span> <span class="kt">DataRequest</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">DataRequest</span>
+
+<span class="kd">internal</span> <span class="kd">typealias</span> <span class="kt">URLRequestConvertible</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">URLRequestConvertible</span>
+
+<span class="c1">/// Represents an HTTP method.</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Method</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">HTTPMethod</span>
+
+<span class="c1">/// Choice of parameter encoding.</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">ParameterEncoding</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">ParameterEncoding</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">JSONEncoding</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">JSONEncoding</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">URLEncoding</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">URLEncoding</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">PropertyListEncoding</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">PropertyListEncoding</span>
+
+<span class="c1">/// Multipart form</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RequestMultipartFormData</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">MultipartFormData</span>
+
+<span class="c1">/// Multipart form data encoding result.</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">MultipartFormDataEncodingResult</span> <span class="o">=</span> <span class="kt">Manager</span><span class="o">.</span><span class="kt">MultipartFormDataEncodingResult</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">DownloadDestination</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">DownloadRequest</span><span class="o">.</span><span class="kt">DownloadFileDestination</span>
+</code></pre>
+</div>
+
+
+    </div>
+    
+    <!--  -->
+    
+    <div id="container"></div>
+		<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+		<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+		<script>
+			var gitment = new Gitment({
+  				id: '源码：走进Moya的内心世界', // 可选。默认为 location.href
+  				owner: 'Khala-wan',
+  				repo: 'Gitment',
+  				oauth: {
+    				client_id: '4a573894138f17234910',
+    				client_secret: '55d6763ae533805391c04757ba8d925c04f4639d',
+  				},
+			})
+			gitment.render('container');
+		</script>
+	
+	</article>
+</main>
+<footer>
+  <span><a href="http://localhost:4000">万圣</a></span>
+  <span><a href="https://github.com/Khala-wan"><i class="fa fa-github-square"></i></a><a href="http://steamcommunity.com/profiles/76561198086573396/"><i class="fa fa-steam-square"></i></a><a href="http://weibo.com/u/2506284730/home?wvr=5"><i class="fa fa-weibo"></i></a><a href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/social/weixinQR.jpeg"><i class="fa fa-weixin"></i></a></span>
+  <span>© 2017</span>
+</footer>

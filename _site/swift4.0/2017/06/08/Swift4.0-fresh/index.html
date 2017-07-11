@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="author" content="万圣">
+<meta name="description" content="这里放满了胡思乱想">
+<title> Swift4.0:尝鲜以及第一次翻车纪念 › Khala-Wan`</title>
+<link rel="canonical" href="http://localhost:4000/swift4.0/2017/06/08/Swift4.0-fresh/">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,300italic,400italic" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Gentium+Basic:400,400italic" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/basic.css" rel="stylesheet">
+<link href="/highlight.css" rel="stylesheet">
+<link href="/index.css" rel="stylesheet">
+<link href="/customized.css" rel="stylesheet">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Khala-Wan`" />
+
+
+<header>
+  <h1><a href="/">Khala-Wan`</a></h1>
+  <nav>
+    <li><a href="/">Home</a></li><li><a href="/Projects/">Projects</a></li><li><a href="/about/">About me</a></li><li><a href="/archive/">Archive</a></li>
+  </nav>
+</header>
+<main>
+  <article class="light">
+    <div id="toc"></div>
+    	<script src="/toc.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+    		$('#toc').toc();
+		</script>
+    <header id="123">
+      <h2><a href="/swift4.0/2017/06/08/Swift4.0-fresh/">Swift4.0:尝鲜以及第一次翻车纪念</a></h2>
+      <span><time datetime="2017-06-08T02:32:01+08:00">Jun 8, 2017</time> • Swift4.0</span>
+    </header>
+    <div>
+<p>昨天凌晨WWDC2017刚发布了Xcode9 Beta包含了Swift4.0，正好最近在做MacOS的项目，因为项目是个人的，所以果断用来尝鲜。但是最后还是翻车了。所以写个博客纪念我在Swift4.0翻的第一次车。😂</p>
+
+<p>##初体验
+4.0这一次更新的兼容程度相比之前2.3到3.0那次更新真的可以说是很良心了。在修改了差不多30行代码，花费5分钟左右时间之后，项目已经彻底兼容了Swift4.0.这个结果真的让我惊讶，还以为需要花费点功夫呢。至于Swift4.0的优化点，iOS的还没来得及看，MacOS上最让我开心的是针对各种NSButton的Status的改变。
+3.1时期使用NSCheckBox的时候在StoryBoard中查看它的相关属性可以看到一个叫做Status的属性，有三个值：</p>
+
+<ul>
+  <li>On</li>
+  <li>Off</li>
+  <li>Mixed</li>
+</ul>
+
+<p>OK，大家都能看懂，然后拖线使用时，获取sender：NSButton的Status就成了Int类型的值。</p>
+<blockquote>
+  <p>0 -&gt; Off ; 1 -&gt; On</p>
+</blockquote>
+
+<p>虽然不影响使用，但是从代码的阅读性上来讲真的是槽点太多。
+但是本次更新之后我欣喜的发现，这个status变成了枚举✌️。</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="n">open</span> <span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">NSControl</span><span class="o">.</span><span class="kt">StateValue</span>
+	
+</code></pre>
+</div>
+<p>诸如此类还有很多，比如：NSOpenPanel Begin之后闭包里面的result也从Int换成了枚举。</p>
+
+<p>从这点优化来看，Apple是不是终于记起来优化Cocoa框架复杂又恶心的API了？具体还有什么变化我就不废话了。之后网上肯定有铺天盖地各种博客给大家看。</p>
+
+<p>##翻车现场
+言归正传，我们来讲讲这次翻车的过程。我为了从XIB中实例化我的NSWindow，给NSWinow写了一个扩展方法如下：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">NSWindow</span><span class="p">{</span>
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">loadWithNibName</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span><span class="kt">String</span> <span class="p">,</span> <span class="n">_</span> <span class="nv">loadClass</span><span class="p">:</span><span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSWindow</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">nib</span><span class="p">:</span><span class="kt">NSNib</span> <span class="o">=</span> <span class="kt">NSNib</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibNamed</span><span class="p">:</span> <span class="kt">NSNib</span><span class="o">.</span><span class="kt">Name</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="n">name</span><span class="p">),</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">var</span> <span class="nv">tempObjects</span> <span class="o">=</span> <span class="kt">NSArray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nib</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">(</span><span class="nv">withOwner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">topLevelObjects</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">tempObjects</span><span class="p">)){</span>
+            <span class="k">return</span> <span class="kt">NSWindow</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">object</span> <span class="k">in</span> <span class="n">tempObjects</span><span class="o">!</span><span class="p">{</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">object</span> <span class="k">as</span> <span class="kt">AnyObject</span><span class="p">)</span><span class="o">.</span><span class="n">classForCoder</span> <span class="o">==</span> <span class="n">loadClass</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">object</span> <span class="k">as!</span> <span class="kt">NSWindow</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">NSWindow</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>当时切换到Swift4.0的时候<strong>instantiate(withOwner: nil, topLevelObjects: &amp;tempObjects)</strong>这个API报错，说&amp;tempObjects这个参数的类型不对。于是跳进去看定义，尴尬了，之前这里让传UnsafePoint，也就是指针，现在需要传进去一个<strong>AutoreleasingUnsafeMutablePointer</strong>比之前多了个Autoreleasing
+话不多说，Xcode让怎么办就怎么办呗，于是修改如下：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code>
+<span class="o">!</span><span class="n">nib</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">(</span><span class="nv">withOwner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">topLevelObjects</span><span class="p">:</span> <span class="kt">AutoreleasingUnsafeMutablePointer</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tempObjects</span><span class="p">))</span>
+	
+</code></pre>
+</div>
+
+<p>恩。。。编译通过，看着没什么问题了。运行起来！结果你也猜到了，崩溃了。崩溃直接进了AppDelegate。lldb没有任何提示，于是果断全局断点伺候，无效。还是没抓到。于是仔细看下代码报错原因：
+</p>
+<blockquote>
+  <p>EXC_BADACCESS:这是访问了一个已经被release了的对象。</p>
+</blockquote>
+
+<p>于是我猜测应该是这个TempObjects数组被提前Release了。打开Scheme的编辑窗，在Diagnostics中勾选<strong>Malloc Stack</strong>，<strong>Zombie Objects</strong>这两个选项。然后来让我们看一下是不是TempObjects被提前释放了。
+结果如下：</p>
+
+<div align="center"><img style="border: 1px solid #dcdcdc" width="500" height="30" src="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/Swift4.0/0.jpg" /></div>
+
+<p>果然是它被提前释放了。对比之前的代码可以发现，使用了AutoreleasingUnsafeMutablePointer这个类型之后才出现这个问题，因为TempObjects是一个局部变量，在函数执行完之后就会被释放，在这之后<strong>AutoreleasingUnsafeMutablePointer</strong>又试图去Release它，所以造成了<strong>EXC_BADACCESS</strong>.
+于是修改代码如下：</p>
+
+<div class="language-swift highlighter-rouge"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">NSWindow</span><span class="p">{</span>
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">loadWithNibName</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span><span class="kt">String</span> <span class="p">,</span> <span class="n">_</span> <span class="nv">loadClass</span><span class="p">:</span><span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSWindow</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">nib</span><span class="p">:</span><span class="kt">NSNib</span> <span class="o">=</span> <span class="kt">NSNib</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibNamed</span><span class="p">:</span> <span class="kt">NSNib</span><span class="o">.</span><span class="kt">Name</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="n">name</span><span class="p">),</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span><span class="o">!</span>
+        <span class="k">var</span> <span class="nv">tempObjects</span><span class="p">:</span><span class="kt">NSArray</span><span class="p">?</span> <span class="o">=</span> <span class="kt">NSArray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nib</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">(</span><span class="nv">withOwner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">topLevelObjects</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">tempObjects</span><span class="p">)){</span>
+            <span class="k">return</span> <span class="kt">NSWindow</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">object</span> <span class="k">in</span> <span class="n">tempObjects</span><span class="o">!</span><span class="p">{</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">object</span> <span class="k">as</span> <span class="kt">AnyObject</span><span class="p">)</span><span class="o">.</span><span class="n">classForCoder</span> <span class="o">==</span> <span class="n">loadClass</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">object</span> <span class="k">as!</span> <span class="kt">NSWindow</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">NSWindow</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+<p>将TempObjects的类型声明成Optional即可。看来不能全部听信Xcode的自动修复。😂</p>
+
+<p>##最后
+这就是我Swift4.0的初体验和第一次翻车过程。Swift4.0和Xcode9还有其他新特性和好玩的东西，相信过不了多久大家都会将它们发掘出来的。就说这么多，我要去玩玩这两个新玩具了。哈哈。</p>
+
+
+    </div>
+    
+    <!--  -->
+    
+    <div id="container"></div>
+		<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+		<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+		<script>
+			var gitment = new Gitment({
+  				id: 'Swift4.0:尝鲜以及第一次翻车纪念', // 可选。默认为 location.href
+  				owner: 'Khala-wan',
+  				repo: 'Gitment',
+  				oauth: {
+    				client_id: '4a573894138f17234910',
+    				client_secret: '55d6763ae533805391c04757ba8d925c04f4639d',
+  				},
+			})
+			gitment.render('container');
+		</script>
+	
+	</article>
+</main>
+<footer>
+  <span><a href="http://localhost:4000">万圣</a></span>
+  <span><a href="https://github.com/Khala-wan"><i class="fa fa-github-square"></i></a><a href="http://steamcommunity.com/profiles/76561198086573396/"><i class="fa fa-steam-square"></i></a><a href="http://weibo.com/u/2506284730/home?wvr=5"><i class="fa fa-weibo"></i></a><a href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/social/weixinQR.jpeg"><i class="fa fa-weixin"></i></a></span>
+  <span>© 2017</span>
+</footer>
