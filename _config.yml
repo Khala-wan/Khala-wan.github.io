@@ -31,7 +31,11 @@ links:
   - steam: {url: "http://steamcommunity.com/profiles/76561198086573396/", square: true}
   - weibo: {url: "http://weibo.com/u/2506284730/home?wvr=5", square: false}
   - weixin: {url: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/social/weixinQR.jpeg", square: false}
-
+rdiscount:
+    extensions:
+      - generate_toc
+redcarpet:
+    extensions: [with_toc_data]
 paginate: 10
 excerpt_separator: "\n\n\n" # excerpt ends after two blank lines
 permalink: pretty
