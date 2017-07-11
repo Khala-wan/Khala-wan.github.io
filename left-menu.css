@@ -2,7 +2,7 @@
 	margin-top: 121px;
 	float: left;
 	position: relative;
-	width: 25%;
+	width: 10%;
 }
 
 #menu-pannel{
@@ -13,6 +13,10 @@
 
 #toc{
 	position: fixed;
+	width: 18%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 li {
