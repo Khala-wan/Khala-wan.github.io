@@ -1,7 +1,7 @@
 ---
 layout: blank
 ---
-<main>
+<main data-spy="scroll" data-target=".toc" data-offset="20">
   {% for page in paginator.posts %}
   <article class="{% if site.style.articles == 'stripe' %}{% cycle 'light', 'dark' %}{% else %}{{ site.style.articles }}{% endif %}">
     <header>
