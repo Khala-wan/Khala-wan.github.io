@@ -1,0 +1,20 @@
+#left-menu{
+	margin-top: 121px;
+	float: left;
+	position: relative;
+	width: 25%;
+}
+
+#menu-pannel{
+	height: 100%;
+	width: 80%;
+	float: right;
+}
+
+#toc{
+	position: fixed;
+}
+
+li {
+	list-style-type:none;
+}
