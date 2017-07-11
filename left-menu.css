@@ -3,6 +3,7 @@
 	position: fixed;
 	top: 210px;
 	font-size: calc(.6vw + .3em);
+	width: 20%;
 }
 #toc a{
 	width: 100%;
@@ -10,8 +11,22 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     display: inline-block;
+    color: #2493f3;
 }
 
 li {
 	list-style-type:none;
+}
+.clickable-header {
+  cursor:pointer;
+}
+.clickable-header:hover {
+  text-decoration:underline;
+}
+.top-level-header {
+  display:inline;
+}
+.back-to-top {
+  margin-left:5px;
+  cursor:pointer;
 }
