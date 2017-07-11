@@ -1,22 +1,11 @@
-#left-menu{
-	margin-top: 121px;
-	float: left;
-	position: relative;
-	width: 10%;
-}
-
-#menu-pannel{
-	height: 100%;
-	width: 80%;
-	float: right;
-}
-
-#toc{
+#toc a{
 	position: fixed;
+	top: 210px;
 	width: 18%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: inline-block;
 }
 
 li {
