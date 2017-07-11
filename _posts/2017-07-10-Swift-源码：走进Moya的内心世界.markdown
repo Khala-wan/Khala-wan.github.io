@@ -118,7 +118,7 @@ open class MoyaProvider<Target: TargetType> {
 ```swift
 open class MoyaProvider<Target: TargetType> {}
 ```
-可以看到，MoyaProvider是一个使用了`泛型`的类。接收一个遵守[TargetType](#0)的类型。
+可以看到，MoyaProvider是一个使用了`泛型`的类。接收一个遵守`TargetType`的类型。
 
 ## MoyaProvdier的属性
 MoyaProvdier有如下属性：
@@ -128,7 +128,7 @@ MoyaProvdier有如下属性：
 /// Closure that defines the endpoints for the provider.
     public typealias EndpointClosure = (Target) -> Endpoint<Target>
 ```
-EndpointClosure属性是一个闭包，用于让我们对Moya生成的[Endpoint](#1)进行一些我们自己的定制然后返回一个Endpoint类，例如：我们想增加一个新的HttpHeader：
+EndpointClosure属性是一个闭包，用于让我们对Moya生成的`Endpoint`进行一些我们自己的定制然后返回一个Endpoint类，例如：我们想增加一个新的HttpHeader：
 
 ```swift
 let endpointClosure = { (target: MyTarget) -> Endpoint<MyTarget> in
@@ -299,7 +299,6 @@ func requestNormal(_ target: Target, queue: DispatchQueue?, progress: Moya.Progr
     }
 ```
 
-<h1 id="0"></h1>
 ## TargetType
 TargetType是一个协议，它要求遵守者提供一些只读属性，这些属性正好是我们网络请求所需要的参数元素。
 属性如下：
@@ -356,7 +355,6 @@ public enum GitHub {
 
 更多的枚举高级用法请看Swiftgg翻译的文章：[Swift 中枚举高级用法及实践](http://swift.gg/2015/11/20/advanced-practical-enum-examples/)。这篇文章我也读过，受益颇多，感谢Swiftgg翻译组。
 
-<h1 id="1"></h1>
 ## 端点（Endpoint）
 
 我们通过Moyaprovider实例而产生的一个API端点。通过这个端点我们可以发起请求，有点像AFN的`AFNSession`,借用Moya的文档原图，一次请求应该是这样发起的：
