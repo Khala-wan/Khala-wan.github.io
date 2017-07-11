@@ -1,38 +1,16 @@
----
-layout: blank
----
-<main>
-  <article class="{% if site.style.articles == 'stripe' %}light{% else %}{{ site.style.articles }}{% endif %}">
-    <header>
-      <h2><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a></h2>
-      <span>{% if page.author %}{{ page.author }} • {% endif %}{% if page.date %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>{% endif %}{% if page.categories and {{page.categories}} != empty %} • {{ page.categories | array_to_sentence_string }}{% endif %}</span>
-    </header>
-    <div>
-{{ content }}
+<!DOCTYPE html>
+<html>
+  {% include head.html %}
+
+  <body>
+    {% include header.html %}
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        {{ content }}
+      </div>
+
+      {% include footer.html %}
     </div>
-    {% if site.comments.isso and page.comments %}
-    <div id="isso-thread"></div>
-    {% endif %}
-    <!-- {% if site.comments.disqus and page.comments %}
-    <div id="disqus_thread"></div>
-    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-    {% endif %} -->
-    {% if page.title != 'About me' and page.title != 'Projects' and page.title != 'Archive'%}
-    <div id="container"></div>
-		<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-		<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-		<script>
-			var gitment = new Gitment({
-  				id: '{{ page.title }}', // 可选。默认为 location.href
-  				owner: 'Khala-wan',
-  				repo: 'Gitment',
-  				oauth: {
-    				client_id: '4a573894138f17234910',
-    				client_secret: '55d6763ae533805391c04757ba8d925c04f4639d',
-  				},
-			})
-			gitment.render('container');
-		</script>
-	{% endif %}
-	</article>
-</main>
+  </body>
+</html>
