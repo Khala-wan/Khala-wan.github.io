@@ -1,39 +1,43 @@
-# Site settings
-title: Khala-wan`
-description: 'Swift Niu bi'
-# url: 'http://Khala-wan.com'
-baseurl: 'http://Khala-wan.com/'
-# google_analytics: 'UA-XXXXXX-X'
-# disqus_shortname: 'your-disqus-name'
+title: "Khala-Wan`"
+author: "万圣"
+description: "这里放满了胡思乱想"
+more: "read more »"
+url: "https://khala-wan.github.io"
+#baseurl: "/contrast" # comment out if in root directory
 
-author:
-  name: '万圣'
-  email: wansheng_ios@sina.com
-  # twitter_username: joshgerdes
-  # facebook_username: joshgerdes
-  github_username:  Khala-wan
-  linkedin_username:  Khala-wan
+comments:
+  # disqus: "niklasbuschmann"
+#  isso: "comments.mysite.org"
 
-defaults:
-  -
-    scope:
-      path: ''
-      type: 'posts'
-    values:
-        layout: 'post'
+style:
+  body: 'white'
+  margin: 0%
+  padding: 30%
+  nav: "#222"
+  articles: 'stripe' # 'light' 'dark' and 'stripe' possible
+  uppercase: false
 
-# Build settings
-destination: _site
+# see http://fontawesome.io/icons/#brand for all possible icons
+# notice: squared icons only work if supported by font-awesome
+
+links:
+  - github: {url: "https://github.com/Khala-wan", square: true}
+  # - reddit: {url: "https://www.reddit.com/user/me/", square: true}
+  # - twitter: {url: "https://twitter.com/me/", square: true}
+  # - facebook: {url: "https://www.facebook.com/me", square: true}
+  # - google-plus: {url: "https://plus.google.com/+me", square: true}
+  # - youtube: {url: "https://www.youtube.com/user/me", square: true}
+  # - tumblr: {url: "http://me.tumblr.com/", square: true}
+  - steam: {url: "http://steamcommunity.com/profiles/76561198086573396/", square: true}
+  - weibo: {url: "http://weibo.com/u/2506284730/home?wvr=5", square: false}
+  - weixin: {url: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/social/weixinQR.jpeg", square: false}
+rdiscount:
+    extensions:
+      - generate_toc
+redcarpet:
+    extensions: [with_toc_data]
 paginate: 10
-permalink: /:year/:title/
-markdown: kramdown
-highlighter: rouge
-
-kramdown:
-  # use Github Flavored Markdown
-  input: GFM
-  # do not replace newlines by <br>s
-  hard_wrap: false
-
-gems: ['jekyll-paginate']
-# exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']
+excerpt_separator: "\n\n\n" # excerpt ends after two blank lines
+permalink: pretty
+defaults: [{scope: {path: ""}, values: {layout: "default"}}, {scope: {path: "", type: "posts"}, values: {comments: true}}]
+gems: [jekyll-feed, jekyll-paginate] # include feed plugin (supported by gh-pages)
