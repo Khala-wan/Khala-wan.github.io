@@ -20,6 +20,15 @@ style:
 # see http://fontawesome.io/icons/#brand for all possible icons
 # notice: squared icons only work if supported by font-awesome
 
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  # use Github Flavored Markdown
+  input: GFM
+  # do not replace newlines by <br>s
+  hard_wrap: false
+
 links:
   - github: {url: "https://github.com/Khala-wan", square: true}
   # - reddit: {url: "https://www.reddit.com/user/me/", square: true}
