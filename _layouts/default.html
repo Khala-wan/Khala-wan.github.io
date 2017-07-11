@@ -1,7 +1,9 @@
 ---
 layout: blank
 ---
-
+<link rel="stylesheet" href="http://khala-wan.com/boot-toc.css">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<div data-spy="scroll" data-target="#toc" data-offset="20">
 <div id="toc"></div>
       <link rel="stylesheet" href="http://khala-wan.com/left-menu.css">
       <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
@@ -11,7 +13,7 @@ layout: blank
         $('#toc').toc({ showEffect: 'slideDown' });
       });
     </script>
-
+</div>
 <main>
   <article class="{% if site.style.articles == 'stripe' %}light{% else %}{{ site.style.articles }}{% endif %}">
     <header>
