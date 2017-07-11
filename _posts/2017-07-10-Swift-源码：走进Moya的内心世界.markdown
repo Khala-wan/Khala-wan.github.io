@@ -8,7 +8,7 @@ categories: Swift
 	<img style="height:160px" src="https://github.com/Moya/Moya/raw/master/web/logo_github.png" />
 </div>
 
-[Moya](https://github.com/Moya/Moya)是一个基于[Alamofire](https://github.com/Alamofire/Alamofire)的网络层封装，让我们不用关心Alamofire的内部实现，相对于为我们提供了更高等级的API。Moya在业务解耦，API管理，测试等方便都有不错的表现。
+[Moya](https://github.com/Moya/Moya)是一个基于[Alamofire](https://github.com/Alamofire/Alamofire)的网络层封装，让我们不用关心Alamofire的内部实现，相对于为我们提供了更高等级的API。Moya在业务解耦，API管理，测试等方面都有不错的表现。
 
 
 
@@ -19,7 +19,7 @@ categories: Swift
 
 >注意：本文默认你已经熟悉Moya的基本使用，内容不会按照使用教学的顺序来，所以如果你还没有使用过Moya，那么建议你下载[Moya](https://github.com/Moya/Moya) 的Demo看看，或者去查看它的[文档](https://github.com/Moya/Moya/tree/master/docs)，内容还是很详细的。
 
-##MoyaProvider
+## MoyaProvider
 
 MoyaProvider是Moya的基础，它是你API的端点的管理者。Moya的所有功能都是通过MoyaProvider来使用。首先我们先来看一下它的定义：
 
@@ -111,14 +111,14 @@ open class MoyaProvider<Target: TargetType> {
 }
 ```
 代码比较长，我们分开来进行分析。
-###定义
+
+### 定义
 首先我们来看看MoyaProvider的定义如下：
 
 ```swift
 open class MoyaProvider<Target: TargetType> {}
-
 ```
-可以看到，MoyaProvider是一个使用了`泛型`的类。接收一个遵守TargetType的类型。
+可以看到，MoyaProvider是一个使用了`泛型`的类。接收一个遵守[TargetType](#0)的类型。
 
 ## MoyaProvdier的属性
 MoyaProvdier有如下属性：
@@ -128,7 +128,7 @@ MoyaProvdier有如下属性：
 /// Closure that defines the endpoints for the provider.
     public typealias EndpointClosure = (Target) -> Endpoint<Target>
 ```
-EndpointClosure属性是一个闭包，用于让我们对Moya生成的Endpoint进行一些我们自己的定制然后返回一个Endpoint类，例如：我们想增加一个新的HttpHeader：
+EndpointClosure属性是一个闭包，用于让我们对Moya生成的[Endpoint](#1)进行一些我们自己的定制然后返回一个Endpoint类，例如：我们想增加一个新的HttpHeader：
 
 ```swift
 let endpointClosure = { (target: MyTarget) -> Endpoint<MyTarget> in
@@ -144,7 +144,7 @@ let provider = MoyaProvider<GitHub>(endpointClosure: endpointClosure)
 /// Closure that decides if and what request should be performed
     public typealias RequestResultClosure = (Result<URLRequest, MoyaError>) -> Void
 ```
-同上，这是个闭包属性，入参的类型可能有小伙伴不熟悉，这是使用了[Result](https://github.com/antitypical/Result)框架,用去将`throw`的方式换成Result<data,error>的方式返回。
+同上，这是个闭包属性，入参的类型可能有小伙伴不熟悉，这是使用了[Result](https://github.com/antitypical/Result)框架,用来将`throw`的方式换成`Result<data,error>`的方式返回。
 
 利用这个闭包我们可以进行请求映射，在请求发起之前修改我们的请求然后将一个RequestResultClosure回调出去，例如：
 
@@ -176,7 +176,8 @@ public final class func defaultEndpointMapping(for target: Target) -> Endpoint<T
         )
     }
 ```
-首先MoyaProvider通过这个方法生成了一个端点。
+首先MoyaProvider通过这个方法生成了一个端点(Endpoint)。
+
 ### requestMap
 随后Moya内部映射出一个URLRequest
 
@@ -189,6 +190,7 @@ public final class func defaultRequestMapping(for endpoint: Endpoint<Target>, cl
         }
     }
 ```
+
 ### MoyaProvider().request
 代码很长，通过注释来看
 
@@ -292,12 +294,13 @@ func requestNormal(_ target: Target, queue: DispatchQueue?, progress: Moya.Progr
         }
         //调用我们队request的自定义设置
         requestClosure(endpoint, performNetworking)
-
+		 //返回一个可以被取消的请求Token
         return cancellableToken
     }
 ```
 
-##TargetType
+<h1 id="0"></h1>
+## TargetType
 TargetType是一个协议，它要求遵守者提供一些只读属性，这些属性正好是我们网络请求所需要的参数元素。
 属性如下：
 
@@ -326,7 +329,8 @@ MoyaProvider<MyAPI>().request()
 值得一提的是这里加入了两个很有意思的参数`SampleData`和`validate`,`SampleData`可以让我们在进行测试插桩的时候，剩下Mock返回数据的代码，只要我们设置了属性之后在测试的时候会自动返回。这样的设计真的很巧妙，让我们的测试变得更加轻松。（这也是我为什么选择使用Moya的原因，当然原因不止如此），另一个属性就是`Valiadate`，以前我们想要验证参数的合法性，可能会有如下方法：
 
 * 在调用请求之前先校验，如果不合法就return
-* 把一个这样的闭包：(你的参数)->(验证结果)当做一个参数传进request方法中。（我就是这样做的）
+* 把一个这样的闭包：**(你的参数) -> (验证结果)**当做一个参数传进request方法中。（我就是这样做的）
+
 如上两个方法都有各自的缺点。来看Moya的思路：
 
 ```swift
@@ -335,10 +339,10 @@ public var validate: Bool {
     return phoneNumber.characters.count == 11
 }
 ```
-通过闭包返回一个校验的值，一次性配置好以后都不用改了。实在是很便利。当然，看到这里你也许会有个疑惑，既然这个属性的值是`固定`的，那么是不是每一个API都要创建一个实例然后遵守TargetType，为了缩减代码然后创建一个`BaseAPI`之类的东西让其他的继承它？
+通过闭包返回一个校验的值，一次性配置好以后都不用改了。实在是很便利。当然，看到这里你也许会有个疑惑，既然这个属性的值是`固定的`，那么是不是每一个API都要创建一个实例然后遵守TargetType，然后为了缩减代码还要创建一个`BaseAPI`之类的东西让其他的API对象来继承它？
 NONONO~，如果说使用泛型给MoyaProvider的灵活性奠定了基础，那么使用枚举Enum来定义管理API的方式就给Moya的灵活赋予了灵性。
 
-##使用Enum来管理/定义我们的APIs
+## 使用Enum来管理/定义我们的APIs
 来看看Demo中的例子，Demo中有一个专门请求GithubAPI的模块。来看看是怎么定义这些API的：
 
 ```swift
@@ -348,11 +352,12 @@ public enum GitHub {
     case userRepositories(String)
 }
 ```
-通过枚举我们可以很清晰看出Giuhub模块中有哪些API，这样我们的业务逻辑变得更加清晰。并且使用Enum的关联值来表示各个API的具体参数。这样我们是不是以后不需要再写注释和看文档了。😂好吧~其实还是要看文档的，当然这样的写法在一定程度上免去了我们可能会出现的困惑，也许几个月过去了，回头看代码突然忘了这个api的参数的时候，可以很清晰的看出它是什么类型和作用。写到这里请让我感叹一句：`Swift大法好！`
+通过枚举我们可以很清晰看出Giuhub模块中有哪些API，这样可以使我们的业务逻辑变得更加清晰。使用Enum的关联值来表示各个API的具体参数。这样我们是不是以后不需要再写注释和看文档了。😂好吧~其实还是要看文档的，当然这样的写法在一定程度上免去了我们可能会出现的困惑，也许几个月过去了，回头看代码突然忘了这个api的参数的时候，可以很明白的看出它是什么类型和作用。写到这里请让我感叹一句：`Swift大法好！`
 
-更多的枚举高级用法请看Swiftgg翻译的文章：[Swift 中枚举高级用法及实践](http://swift.gg/2015/11/20/advanced-practical-enum-examples/)这篇文章我也读过，受益颇多，感谢Swiftgg翻译组。
+更多的枚举高级用法请看Swiftgg翻译的文章：[Swift 中枚举高级用法及实践](http://swift.gg/2015/11/20/advanced-practical-enum-examples/)。这篇文章我也读过，受益颇多，感谢Swiftgg翻译组。
 
-##端点（Endpoint）
+<h1 id="1"></h1>
+## 端点（Endpoint）
 
 我们通过Moyaprovider实例而产生的一个API端点。通过这个端点我们可以发起请求，有点像AFN的`AFNSession`,借用Moya的文档原图，一次请求应该是这样发起的：
 
@@ -366,6 +371,7 @@ public enum GitHub {
 * parameters
 * httpHeaderFields
 * 等等
+
 ### Endpoint.request
 ```swift
 /// Extension for converting an `Endpoint` into an optional `URLRequest`.
