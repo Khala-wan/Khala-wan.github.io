@@ -2,6 +2,7 @@
 #toc {
 	position: fixed;
 	top: 210px;
+	font-size: calc(.6vw + .3em);
 }
 #toc a{
 	width: 18%;
