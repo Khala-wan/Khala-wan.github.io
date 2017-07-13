@@ -21,6 +21,7 @@
     <li><a href="{{ site.baseurl }}/">Home</a></li>{% for node in site.pages offset: 1 %}{% if node.title %}<li><a href="{{ node.url | prepend: site.baseurl }}"{% if page.url == node.url %} class="selected"{% endif %}>{{ node.title }}</a></li>{% endif %}{% endfor %}
   </nav>
   <link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="shortcut icon"  type="image/x-icon" />
+  <link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="icon"  type="image/x-icon" />
 </header>
 {{ content }}
 <footer>
