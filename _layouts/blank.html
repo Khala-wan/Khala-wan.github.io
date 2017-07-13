@@ -20,8 +20,21 @@
   <nav>
     <li><a href="{{ site.baseurl }}/">Home</a></li>{% for node in site.pages offset: 1 %}{% if node.title %}<li><a href="{{ node.url | prepend: site.baseurl }}"{% if page.url == node.url %} class="selected"{% endif %}>{{ node.title }}</a></li>{% endif %}{% endfor %}
   </nav>
-  <link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="shortcut icon"  type="image/x-icon" />
-  <link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="icon"  type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="57x57" href="{{ "apple-touch-icon-57x57.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ "apple-touch-icon-60x60.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{ "apple-touch-icon-72x72.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ "apple-touch-icon-76x76.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{ "apple-touch-icon-114x114.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="120x120" href="{{ "apple-touch-icon-120x120.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="144x144" href="{{ "apple-touch-icon-144x144.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ "apple-touch-icon-152x152.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "apple-touch-icon-180x180.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
+  <link rel="icon" type="image/png" href="{{ "favicon-32x32.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}" sizes="32x32">
+  <link rel="icon" type="image/png" href="{{ "favicon-194x194.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}" sizes="194x194">
+  <link rel="icon" type="image/png" href="{{ "favicon-96x96.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}" sizes="96x96">
+  <link rel="icon" type="image/png" href="{{ "android-chrome-192x192.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}" sizes="192x192">
+  <link rel="icon" type="image/png" href="{{ "favicon-16x16.png" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}" sizes="16x16">
+  <link rel="shortcut icon" href="{{ "favicon.ico" | prepend: "https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicons/" }}">
 </header>
 {{ content }}
 <footer>
