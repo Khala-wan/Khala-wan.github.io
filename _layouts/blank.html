@@ -12,7 +12,6 @@
 <link href="{{ '/highlight.css' | prepend: site.baseurl }}" rel="stylesheet">
 <link href="{{ '/index.css' | prepend: site.baseurl }}" rel="stylesheet">
 <link href="{{ '/customized.css' | prepend: site.baseurl }}" rel="stylesheet">
-<link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="shortcut icon"  type="image/x-icon" />
 {% feed_meta %}
 {% if site.comments.disqus and page.comments %}<script src="//{{ site.comments.disqus }}.disqus.com/embed.js" async></script>{% endif %}
 {% if site.comments.isso and page.comments %}<script data-isso="http://{{ site.comments.isso }}" src="//{{ site.comments.isso }}/js/embed.min.js"></script>{% endif %}
@@ -21,6 +20,7 @@
   <nav>
     <li><a href="{{ site.baseurl }}/">Home</a></li>{% for node in site.pages offset: 1 %}{% if node.title %}<li><a href="{{ node.url | prepend: site.baseurl }}"{% if page.url == node.url %} class="selected"{% endif %}>{{ node.title }}</a></li>{% endif %}{% endfor %}
   </nav>
+  <link href="https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/favicon.ico" rel="shortcut icon"  type="image/x-icon" />
 </header>
 {{ content }}
 <footer>
