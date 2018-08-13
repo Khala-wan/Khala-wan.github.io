@@ -13,7 +13,7 @@ categories: ARCSorceProb
 
 我们先看一个例子：
 
-```Objective-C
+```objective-C
 
 NSDictionary* dic = [NSDictionary dictionary];
 //MRC
@@ -33,7 +33,7 @@ NSDictionary的`dictionary`方法是一个`convenience`构造方法。它在类�
 ### 事前准备
 我们先创建`Foo`这个类，通过它我们将模拟四种（有无外部引用、是否是属性）情况下的autorelease对象，并通过源码追踪它的行为。
 
-```Objective-C
+```objective-C
 
 @interface Foo : NSObject
 
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
 
 
 ### 无引用非属性
-```Objective-C
+```objective-C
 
 - (void)testFoo {
     [Foo createFoo];
@@ -171,7 +171,7 @@ Ltmp1:
 
 将重要的代码简化之后，之前的被编译器优化为：
 
-```Objective-C
+```objective-C
 
 - (void)testFoo { 
     objc_unsafeClaimAutoreleasedReturnValue([Foo createFoo]); 
@@ -188,7 +188,7 @@ Ltmp1:
 
 #### objc_autoreleaseReturnValue
 
-```C++
+```c++
 
 id objc_autoreleaseReturnValue(id obj)
 {
@@ -202,7 +202,7 @@ id objc_autoreleaseReturnValue(id obj)
 
 ##### prepareOptimizedReturn
 
-```C++
+```c++
 
 enum ReturnDisposition : bool {
     ReturnAtPlus0 = false, ReturnAtPlus1 = true
@@ -328,7 +328,7 @@ acceptOptimizedReturn()
 
 ### 有外部引用非属性
 
-```Objective-C
+```objective-C
 
 - (void)testFoo {
     Foo * myfoo = [Foo createFoo];
@@ -338,7 +338,7 @@ acceptOptimizedReturn()
 
 同样，通过Xcode查看汇编代码，简化后得出：
 
-```Objective-C
+```objective-C
 
 + (instancetype)createFoo  {
     id temp = [self  new]; 
@@ -391,7 +391,7 @@ objc_storeStrong(id *location, id obj)
 
 ### 有外部引用且为属性
 
-```Objective-C
+```objective-C
 
 - (void)testFoo {
     Foo * myfoo = [Foo createFoo];
@@ -415,7 +415,7 @@ objc_storeStrong(id *location, id obj)
 ### 无外部引用且为属性
 
 
-```Objective-C
+```objective-C
 
 - (void)testFoo {
     self.myfoo = [Foo createFoo];
