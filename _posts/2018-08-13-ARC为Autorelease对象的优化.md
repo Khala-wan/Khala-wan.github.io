@@ -1,7 +1,7 @@
 ---
 title:  "ARC为Autorelease对象的优化"
 date:   2018-07-31 15:13:21
-categories: ARC Sorce Prob
+categories: ARCSorceProb
 ---
 
 ## 一个问题
