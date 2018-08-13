@@ -24,7 +24,7 @@ NSDictionary* dic = [NSDictionary dictionary];
 
 ```
 
-NSDictionary的`dictionary`方法是一个`convenience`构造方法。它在类的内部帮你创建了一个字典返回出来。秉承着谁创建谁释放的原则，这个在类内部创建的对象实例，应该走完构造方法之后就被释放了。这样就没有办法在外部引用或者使用了。但是又不能不释放，不然就内存泄漏了。怎么办？聪明的小伙伴都知道autoreleasepool可以延迟对象的释放（直到当前线程的runloop结束时调用对应的自动释放池的`drain`）。所以通过这种方式new出来的对象会被加入到AutoreleasePool中，留给外部调用者引用它的机会。
+NSDictionary的`dictionary`方法是一个`convenience`构造方法。它在类的内部帮你创建了一个字典返回出来。秉承着谁创建谁释放的原则，这个在类内部创建的对象实例，应该走完构造方法之后就被释放了。这样就没有办法在外部引用或者使用了。但是又不能不释放，不然就内存泄漏了。怎么办？大家都知道autoreleasepool可以延迟对象的释放（直到当前线程的runloop结束时调用对应的自动释放池的`drain`）。所以通过这种方式new出来的对象会被加入到AutoreleasePool中，留给外部调用者引用它的机会。
 
 话说ARC不是为我们的内存管理做了很多优化么，那么这种情况它有做什么优化吗？
 
