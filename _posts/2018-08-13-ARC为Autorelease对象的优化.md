@@ -298,6 +298,7 @@ callerAcceptsOptimizedReturn(const void *ra)
 所以通过这样的判断，就可以知道调用方是否处于ARC环境下。
 理清了这个方法内部整个调用流程，这样可以基本梳理出`testFoo()`之后内部的处理如下：
 
+![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/ARCforAutorelease/1.png)
 
 可以看到，runtime经过判断是否是ARC环境下，帮我们做了对应的优化，如果是，则不加入autoreleasePool直接返回对象，仅仅在TLS中标记已经优化。不论是否优化，最终创建的对象都传递给了`objc_unsafeClaimAutoreleasedReturnValue`,这个方法又是做什么的？我们来看下代码：
 
@@ -385,6 +386,8 @@ objc_storeStrong(id *location, id obj)
 }
 ```
 它其实是用于将obj的所有权进行转让，交由location。在这里的调用`objc_storeStrong(&temp,nil); `,相当于将temp进行了release操作，并置为nil。
+
+![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/ARCforAutorelease/2.png)
 
 ### 有外部引用且为属性
 
