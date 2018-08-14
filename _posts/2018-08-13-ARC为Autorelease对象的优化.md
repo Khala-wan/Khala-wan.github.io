@@ -7,13 +7,13 @@ categories: ARCSorceProb
 ## 一个问题
 > 什么样的对象是Autorelease对象？
 
-说到这个问题我们都知道除了以`alloc/new/copy/mutableCopy`或者方法名以`alloc/new/copy/mutableCopy`开头的驼峰法方法创建的对象都是autorelease对象。
+说到这个问题我们都知道除了以 `alloc/new/copy/mutableCopy` 或者方法名以 `alloc/new/copy/mutableCopy` 开头的驼峰法方法创建的对象都是 `autorelease` 对象。
 
 ### why？
 
 我们先看一个例子：
 
-```objective-C
+```obj-c
 
 NSDictionary* dic = [NSDictionary dictionary];
 //MRC
@@ -33,7 +33,7 @@ NSDictionary的`dictionary`方法是一个`convenience`构造方法。它在类�
 ### 事前准备
 我们先创建`Foo`这个类，通过它我们将模拟四种（有无外部引用、是否是属性）情况下的autorelease对象，并通过源码追踪它的行为。
 
-```objective-C
+```obj-c
 
 @interface Foo : NSObject
 
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
 
 
 ### 无引用非属性
-```objective-C
+```obj-c
 
 - (void)testFoo {
     [Foo createFoo];
@@ -65,7 +65,7 @@ int main(int argc, char * argv[]) {
 ```
 通过Xcode的`Product->Perform Action->Assemble“ViewController.m”`，我们可以看到OC源文件(viewController.m)最终被编编译生产的汇编代码，这里就能详细的查看到底编译器在我们的代码背后插入了哪些代码.
 
-```C
+```c
 LPC0_5:
 	add	r2, pc
 	.loc	3 20 5                  @ /Users/wansheng/Desktop/testDemo/testDemo/ViewController.m:20:5
@@ -171,7 +171,7 @@ Ltmp1:
 
 将重要的代码简化之后，之前的被编译器优化为：
 
-```objective-C
+```obj-c
 
 - (void)testFoo { 
     objc_unsafeClaimAutoreleasedReturnValue([Foo createFoo]); 
@@ -198,7 +198,7 @@ id objc_autoreleaseReturnValue(id obj)
 }
 
 ```
-看到if判断里面的`Optimized`大概能猜到是做了优化。在if判断为true直接返回obj。并没有对obj做autorelease操作。在外部才对对象做了`objc_autorelease`操作。我们先看看它判断了什么。
+看到if判断里面的 `Optimized` 大概能猜到是做了优化。在if判断为true直接返回obj。并没有对obj做autorelease操作。在外部才对对象做了 `objc_autorelease` 操作。我们先看看它判断了什么。
 
 ##### prepareOptimizedReturn
 
@@ -238,18 +238,18 @@ setReturnDisposition(ReturnDisposition disposition)
 }
 
 ```
-先来解释下`ReturnAtPlus0 `和`ReturnAtPlus1`,这两个枚举可以理解为未优化和已优化。再看下面两个getter setter方法。分别是基于TLS（线程局部存储）通过key`RETURN_DISPOSITION_KEY `存取优化标记`ReturnDisposition `
+先来解释下 `ReturnAtPlus0` 和 `ReturnAtPlus1`,这两个枚举可以理解为未优化和已优化。再看下面两个getter setter方法。分别是基于TLS（线程局部存储）通过key `RETURN_DISPOSITION_KEY `存取优化标记 `ReturnDisposition`
 那么TLS是什么呢。
 
 ##### TLS
 
-TLS（Thread Local Storage）是系统在内存中为线程自身单独开辟的一片空间，以 `<Key,Value>` 的形式存储线程自己独享的变量。
+TLS（Thread Local Storage）是系统在内存中为线程自身单独开辟的一片空间，以  `<Key,Value>` 的形式存储线程自己独享的变量。
 
-再回到上面的代码中，如果调用方是MRC就不需要优化了，所以需要知道调用方目前处于什么状态，`callerAcceptsOptimizedReturn `的左右就是检查调用方是否是ARC。
+再回到上面的代码中，如果调用方是MRC就不需要优化了，所以需要知道调用方目前处于什么状态， `callerAcceptsOptimizedReturn` 的左右就是检查调用方是否是ARC。
 
 ##### __builtin_return_address(0)
 
-__builtin_return_address(0)让我们可以根据调用栈获取主调方的地址，0表示当前函数，每+1向外层跳一次。这里写`__builtin_return_address(0)`而不是`__builtin_return_address(1)`的原因是`prepareOptimizedReturn ()`声明关键字`static ALWAYS_INLINE bool`表明它是一个`内联函数`在编译器会自动插入到调用的地方。
+__builtin_return_address(0)让我们可以根据调用栈获取主调方的地址，0表示当前函数，每+1向外层跳一次。这里写 `__builtin_return_address(0)` 而不是 `__builtin_return_address(1)` 的原因是 `prepareOptimizedReturn ()` 声明关键字 `static ALWAYS_INLINE bool` 表明它是一个 `内联函数` 在编译器会自动插入到调用的地方。
 
 
 ##### callerAcceptsOptimizedReturn
@@ -278,14 +278,14 @@ callerAcceptsOptimizedReturn(const void *ra)
 }
 
 ```
-因为不同的CPU架构的对齐方式和偏移量不同，所以这个方法针对各种CPU架构都做了单独的实现。这里以arm为例。首先先检查ra寄存器(存入的是pc的值（程序运行处的地址）)低位是否置位1.如果不是，就进入thumb指令集模式，再对齐低16/32位来判断是否是mov r7, r7.还记得上面看汇编的时候让大家注意的`mov r7, r7`么。这里就是通过这种方式来判断调用方是否支持`ARC`
+因为不同的CPU架构的对齐方式和偏移量不同，所以这个方法针对各种CPU架构都做了单独的实现。这里以arm为例。首先先检查ra寄存器(存入的是pc的值（程序运行处的地址）)低位是否置位1.如果不是，就进入thumb指令集模式，再对齐低16/32位来判断是否是mov r7, r7.还记得上面看汇编的时候让大家注意的 `mov r7, r7` 么。这里就是通过这种方式来判断调用方是否支持 `ARC`
 
 总结下各个架构CPU判断ARC的方式
 
-* x86_64: 被调方通过查找指令`mov rax, rdi`，根据下一条指令方法判断是否跳转调用了 `objc_retainAutoreleasedReturnValue` 或者 `objc_unsafeClaimAutoreleasedReturnValue`
-* i386: 被调方通过在帧指针寄存器中查找指令`movl %ebp, %ebp`
-* armv7: 被调方通过在帧指针寄存器中查找指令`mov r7, r7`
-* arm64: 被调方通过在帧指针寄存器中查找指令`mov x29, x29`
+* x86_64: 被调方通过查找指令 `mov rax, rdi`，根据下一条指令方法判断是否跳转调用了 `objc_retainAutoreleasedReturnValue` 或者 `objc_unsafeClaimAutoreleasedReturnValue`
+* i386: 被调方通过在帧指针寄存器中查找指令 `movl %ebp, %ebp`
+* armv7: 被调方通过在帧指针寄存器中查找指令 `mov r7, r7`
+* arm64: 被调方通过在帧指针寄存器中查找指令 `mov x29, x29`
 
 ```c
 
@@ -296,11 +296,11 @@ callerAcceptsOptimizedReturn(const void *ra)
 ```
 
 所以通过这样的判断，就可以知道调用方是否处于ARC环境下。
-理清了这个方法内部整个调用流程，这样可以基本梳理出`testFoo()`之后内部的处理如下：
+理清了这个方法内部整个调用流程，这样可以基本梳理出 `testFoo()` 之后内部的处理如下：
 
 ![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/ARCforAutorelease/1.png)
 
-可以看到，runtime经过判断是否是ARC环境下，帮我们做了对应的优化，如果是，则不加入autoreleasePool直接返回对象，仅仅在TLS中标记已经优化。不论是否优化，最终创建的对象都传递给了`objc_unsafeClaimAutoreleasedReturnValue`,这个方法又是做什么的？我们来看下代码：
+可以看到，runtime经过判断是否是ARC环境下，帮我们做了对应的优化，如果是，则不加入autoreleasePool直接返回对象，仅仅在TLS中标记已经优化。不论是否优化，最终创建的对象都传递给了 `objc_unsafeClaimAutoreleasedReturnValue`,这个方法又是做什么的？我们来看下代码：
 
 ```c++
 // Accept a value returned through a +0 autoreleasing convention for use at +0.
@@ -322,13 +322,13 @@ acceptOptimizedReturn()
 
 ```
 
-总结一下，这个方法通过TLS中的优化位判断这个对象是否被优化过。如果被优化过，则将优化位置位为`false`然后release这个对象。反之则不做操作，因为这个对象是一个`autorelease`对象。请注意，我们当前的讨论是在无外部引用非属性的情况下。所以创建完对象就直接release了。
+总结一下，这个方法通过TLS中的优化位判断这个对象是否被优化过。如果被优化过，则将优化位置位为 `false` 然后release这个对象。反之则不做操作，因为这个对象是一个 `autorelease` 对象。请注意，我们当前的讨论是在无外部引用非属性的情况下。所以创建完对象就直接 `release` 了。
 
 接下来我们来看看其他几种情况。
 
 ### 有外部引用非属性
 
-```objective-C
+```obj-c
 
 - (void)testFoo {
     Foo * myfoo = [Foo createFoo];
@@ -338,7 +338,7 @@ acceptOptimizedReturn()
 
 同样，通过Xcode查看汇编代码，简化后得出：
 
-```objective-C
+```obj-c
 
 + (instancetype)createFoo  {
     id temp = [self  new]; 
@@ -368,7 +368,7 @@ objc_retainAutoreleasedReturnValue(id obj)
 ```
 这个方法通过判断TLS中是否标记了已优化，如果优化了就直接返回，并置位为false。反之，则对对象进行retain操作。
 
-跟`objc_unsafeClaimAutoreleasedReturnValue`一样，对于类便利构造方法返回的接收方，都会根据TLS中的优化标记进行判断。这个标记位总是在创建时置位，在接收时复位。所以这就是一个线程中多个变量仅需要一个标志位来处理优化的原因。置位和复位总是成对出现在代码逻辑中。
+跟 `objc_unsafeClaimAutoreleasedReturnValue` 一样，对于类便利构造方法返回的接收方，都会根据TLS中的优化标记进行判断。这个标记位总是在创建时置位，在接收时复位。所以这就是一个线程中多个变量仅需要一个标志位来处理优化的原因。置位和复位总是成对出现在代码逻辑中。
 
 而之后的`objc_storeStrong`
 
@@ -385,13 +385,13 @@ objc_storeStrong(id *location, id obj)
     objc_release(prev);
 }
 ```
-它其实是用于将obj的所有权进行转让，交由location。在这里的调用`objc_storeStrong(&temp,nil); `,相当于将temp进行了release操作，并置为nil。
+它其实是用于将obj的所有权进行转让，交由location。在这里的调用 `objc_storeStrong(&temp,nil);`,相当于将temp进行了release操作，并置为nil。
 
 ![img](https://github.com/Khala-wan/Khala-wan.github.io/raw/master/resource/ARCforAutorelease/2.png)
 
 ### 有外部引用且为属性
 
-```objective-C
+```obj-c
 
 - (void)testFoo {
     Foo * myfoo = [Foo createFoo];
@@ -410,12 +410,12 @@ objc_storeStrong(id *location, id obj)
 
 ```
 
-因为将临时变量myfoo赋值给了属性self.myfoo。所以`objc_storeStrong(&_myfoo, temp)`相当于调用了`_myfoo`的`set`方法，最后再release了temp。
+因为将临时变量myfoo赋值给了属性self.myfoo。所以 `objc_storeStrong(&_myfoo, temp)` 相当于调用了`_myfoo`的`set`方法，最后再release了temp。
 
 ### 无外部引用且为属性
 
 
-```objective-C
+```obj-c
 
 - (void)testFoo {
     self.myfoo = [Foo createFoo];
