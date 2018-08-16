@@ -1,5 +1,5 @@
 ---
-title:  "在 Swift 中使用 Watch Connectivity — Application Context"
+title:  "【译】在 Swift 中使用 Watch Connectivity — Application Context"
 date:   2018-08-15 15:06:21
 categories:	SwiftGG
 ---
