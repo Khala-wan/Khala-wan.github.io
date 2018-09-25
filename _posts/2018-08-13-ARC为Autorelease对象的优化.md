@@ -9,6 +9,15 @@ categories: ARCSorceProb
 
 说到这个问题我们都知道除了以 `alloc/new/copy/mutableCopy` 或者方法名以 `alloc/new/copy/mutableCopy` 开头的驼峰法方法创建的对象都是 `autorelease` 对象。
 
+
+
+
+
+
+
+
+
+
 ### why？
 
 我们先看一个例子：

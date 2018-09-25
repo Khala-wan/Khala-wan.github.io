@@ -4,15 +4,9 @@ date:   2018-08-15 15:06:21
 categories:	SwiftGG
 ---
 
-原文链接=http://www.codingexplorer.com/watch-connectivity-swift-application-context/
-
-作者=codingexplorer
-
-原文日期=2018-07-18
-
-<!--此处开始正文-->
-
 ![](http://www.codingexplorer.com/wp-content/uploads/2016/02/Watch-Connectivity-Application-Context.png)
+
+> 本文翻译后发布于 [SwiftGG](https://swift.gg)
 
 在 watchOS 1 时代，`WatchKit Extension` 位于已配对的 iOS 设备上，这使得宿主 APP 和 watch 之间的数据共享变得简单。类似偏好设置这种最简单的数据，只需要通过 App Groups 功能来存取 `NSUserDefaults`。目前在手机上留存的其他扩展程序和主 app 之间共享数据仍然应该使用这种方式，例如 `Today View Extension`，但它已不再适用于 watchOS 的 app。
 幸运的是，苹果为我们提供了新的 API 来做这件事。相比 App Groups，Watch Connectivity 拥有更强大的功能。它不仅提供了你的 Apple Watch 和与其配对 iPhone 之间连接状态的更多信息，还允许它们之间进行交互消息和 3 种方式的后台传输，这些方式分别是：
@@ -22,6 +16,16 @@ categories:	SwiftGG
 3. File Transfer
 
 我们今天先讨论第一种方式：Application Context。
+
+
+
+
+
+
+
+
+
+
 
 <!--more-->
 
@@ -304,3 +308,11 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 * [Facets of Swift, Part 5: Custom Operators — Swift Programming — Medium](https://medium.com/swift-programming/facets-of-swift-part-5-custom-operators-1080bc78ccc)
 * [watchOS 2 Tutorial: Using application context to transfer data (Watch    Connectivity #2)](http://www.kristinathai.com/watchos-2-tutorial-using-application-context-to-transfer-data-watch-connectivity-2/) by [Kristina Thai](https://twitter.com/kristinathai)
 * [WatchConnectivity: Sharing The Latest Data via Application Context](https://www.natashatherobot.com/watchconnectivity-application-context/) by   [Natasha The Robot](https://twitter.com/natashatherobot)
+
+## 原文
+
+原文链接=http://www.codingexplorer.com/watch-connectivity-swift-application-context/
+
+作者=codingexplorer
+
+原文日期=2018-07-18
